@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обучалка с карточками</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        #card-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+        }
+        #card-image {
+            width: 300px;
+            height: 300px;
+            object-fit: contain;
+            display: block;
+            margin: 10px auto;
+        }
+        .button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            touch-action: manipulation;
+            transition: background-color 0.2s;
+        }
+        #range-container .button {
+            background-color: #4b5563; /* gray-600 */
+            color: white;
+        }
+        #range-container .button:hover {
+            background-color: #374151; /* gray-700 */
+        }
+        #mode-button {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+        }
+        #mode-button:hover {
+            background-color: #2563eb; /* blue-600 */
+        }
+        #next-button {
+            background-color: #1f2937; /* gray-800 */
+            color: white;
+        }
+        #next-button:hover {
+            background-color: #111827; /* gray-900 */
+        }
+        #auto-button {
+            background-color: #22c55e; /* green-500 */
+            color: white;
+        }
+        #auto-button:hover {
+            background-color: #16a34a; /* green-600 */
+        }
+        #feedback {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #range-container, #order-container, #delay-container {
+            margin: 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        #card-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            font-size: 5rem;
+            font-weight: bold;
+            flex-wrap: wrap;
+        }
+        #mode-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+        #button-container {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        #options-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .option {
+            padding: 8px 16px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .option:hover {
+            background-color: #d0d0d0;
+        }
+        .option.selected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        @media (max-width: 600px) {
+            #card-header {
+                font-size: 3rem;
+            }
+            #mode-title {
+                font-size: 1.8rem;
+            }
+            #range-container .button, #button-container .button {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            #delay-container select {
+                font-size: 0.9rem;
+                padding: 5px;
+            }
+            .option {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            #card-image {
+                width: 200px;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="card-container">
+        <h1 id="mode-title">Тренировка</h1>
+        <div id="range-container">
+            <label for="range-start">От:</label>
+            <input type="number" id="range-start" min="0" max="99" value="0">
+            <label for="range-end">До:</label>
+            <input type="number" id="range-end" min="0" max="99" value="9">
+            <button class="button" onclick="updateRange()" title="Обновить диапазон">↻</button>
+        </div>
+        <div id="order-container">
+            <label><input type="radio" name="order" value="sequential" checked> По порядку</label>
+            <label><input type="radio" name="order" value="random"> Случайно</label>
+        </div>
+        <div id="delay-container">
+            <label for="delay-select" id="delay-label">Время показа (сек):</label>
+            <select id="delay-select">
+                <option value="500">0.5</option>
+                <option value="1000">1</option>
+                <option value="2000" selected>2</option>
+            </select>
+            <label for="answer-time-select" id="answer-time-label">Время ответа (сек):</label>
+            <select id="answer-time-select">
+                <option value="1000">1</option>
+                <option value="2000">2</option>
+                <option value="3000">3</option>
+                <option value="4000">4</option>
+                <option value="5000" selected>5</option>
+                <option value="6000">6</option>
+                <option value="7000">7</option>
+                <option value="8000">8</option>
+                <option value="9000">9</option>
+                <option value="10000">10</option>
+            </select>
+        </div>
+        <div id="card-header">
+            <span id="card-digit"></span>
+            <span id="card-text"></span>
+        </div>
+        <img id="card-image" src="" alt="Изображение">
+        <div id="options-container"></div>
+        <div id="feedback"></div>
+        <div id="button-container">
+            <button class="button" id="mode-button" onclick="toggleMode()" title="Переключить на Тестирование">🔄</button>
+            <button class="button" id="next-button" onclick="nextCard()" title="Следующая карточка">▶▶</button>
+            <button class="button" id="auto-button" onclick="toggleAutoPlay()" title="Включить автопроигрывание">▶</button>
+        </div>
+    </div>
+
+    <script>
+        let cards = { single_digits: [], double_digits: [] };
+        let currentCardIndex = 0;
+        let currentCards = [];
+        let isMemorizationMode = true;
+        let isAutoPlay = false;
+        let autoPlayTimeout = null;
+        let answerTimeout = null;
+        let selectedLetter = null;
+        let selectedWord = null;
+
+        // Загрузка JSON
+        fetch('Flashcards/cards.json')
+            .then(response => {
+                if (!response.ok) throw new Error('Не удалось загрузить cards.json');
+                return response.json();
+            })
+            .then(data => {
+                cards = data;
+                updateRange();
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки JSON:', error);
+                document.getElementById('card-digit').textContent = 'Ошибка загрузки данных';
+            });
+
+        // Обновление диапазона карточек
+        function updateRange() {
+            const start = parseInt(document.getElementById('range-start').value);
+            const end = parseInt(document.getElementById('range-end').value);
+            const order = document.querySelector('input[name="order"]:checked').value;
+            currentCards = [];
+
+            if (start <= 9 && end <= 9) {
+                currentCards = cards.single_digits.slice(start, end + 1);
+            } else {
+                const singleDigits = start <= 9 ? cards.single_digits.slice(start, Math.min(end + 1, 10)) : [];
+                const doubleDigits = cards.double_digits.filter(card => {
+                    const num = parseInt(card.number);
+                    return num >= Math.max(start, 0) && num <= end;
+                });
+                currentCards = [...singleDigits, ...doubleDigits];
+            }
+
+            // Перемешивание, если выбран случайный порядок
+            if (order === 'random') {
+                currentCards = currentCards.sort(() => Math.random() - 0.5);
+            }
+
+            currentCardIndex = 0;
+            showCard();
+            stopAutoPlay();
+            stopAnswerTimer();
+        }
+
+        // Показ карточки
+        function showCard() {
+            if (currentCards.length === 0) {
+                document.getElementById('card-digit').textContent = 'Нет карточек в диапазоне';
+                document.getElementById('card-text').textContent = '';
+                document.getElementById('card-image').src = '';
+                document.getElementById('card-image').style.display = 'none';
+                document.getElementById('options-container').innerHTML = '';
+                document.getElementById('next-button').style.display = 'none';
+                document.getElementById('auto-button').style.display = 'block';
+                document.getElementById('feedback').textContent = '';
+                document.getElementById('delay-label').style.display = isAutoPlay ? 'inline-block' : 'none';
+                document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
+                document.getElementById('answer-time-label').style.display = 'none';
+                document.getElementById('answer-time-select').style.display = 'none';
+                return;
+            }
+
+            const card = currentCards[currentCardIndex];
+            const isSingleDigit = 'digit' in card;
+            document.getElementById('card-digit').textContent = isSingleDigit ? card.digit : card.number;
+            document.getElementById('card-text').textContent = isMemorizationMode ? (isSingleDigit ? card.letter : card.word) : '';
+            const imagePath = isMemorizationMode ? `images/${encodeURIComponent(card.image)}` : '';
+            document.getElementById('card-image').src = imagePath;
+            document.getElementById('card-image').style.display = isMemorizationMode ? 'block' : 'none';
+            document.getElementById('next-button').style.display = isAutoPlay ? 'none' : 'block';
+            document.getElementById('auto-button').style.display = 'block';
+            document.getElementById('delay-label').style.display = isAutoPlay ? 'inline-block' : 'none';
+            document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
+            document.getElementById('answer-time-label').style.display = isMemorizationMode ? 'none' : 'inline-block';
+            document.getElementById('answer-time-select').style.display = isMemorizationMode ? 'none' : 'inline-block';
+            document.getElementById('feedback').textContent = '';
+            selectedLetter = null;
+            selectedWord = null;
+
+            // Показ вариантов ответа в режиме тестирования
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            if (!isMemorizationMode) {
+                if (isSingleDigit) {
+                    // Для 0-9: 5 букв и 5 слов в двух рядах
+                    const letters = getRandomOptions(cards.single_digits, 'letter', card.letter, 5);
+                    const words = getRandomOptions(cards.single_digits, 'word', card.word, 5);
+                    const letterDiv = document.createElement('div');
+                    letterDiv.className = 'options-row';
+                    letterDiv.style.display = 'flex';
+                    letterDiv.style.gap = '10px';
+                    letterDiv.style.flexWrap = 'wrap';
+                    letterDiv.style.justifyContent = 'center';
+                    letters.forEach(letter => {
+                        const option = document.createElement('div');
+                        option.className = 'option';
+                        option.textContent = letter;
+                        option.onclick = () => selectOption(option, 'letter', letter);
+                        letterDiv.appendChild(option);
+                    });
+                    const wordDiv = document.createElement('div');
+                    wordDiv.className = 'options-row';
+                    wordDiv.style.display = 'flex';
+                    wordDiv.style.gap = '10px';
+                    wordDiv.style.flexWrap = 'wrap';
+                    wordDiv.style.justifyContent = 'center';
+                    words.forEach(word => {
+                        const option = document.createElement('div');
+                        option.className = 'option';
+                        option.textContent = word;
+                        option.onclick = () => selectOption(option, 'word', word);
+                        wordDiv.appendChild(option);
+                    });
+                    optionsContainer.appendChild(letterDiv);
+                    optionsContainer.appendChild(wordDiv);
+                } else {
+                    // Для 10-99: 5 слов в одном ряду
+                    const words = getRandomOptions(cards.double_digits, 'word', card.word, 5);
+                    const wordDiv = document.createElement('div');
+                    wordDiv.className = 'options-row';
+                    wordDiv.style.display = 'flex';
+                    wordDiv.style.gap = '10px';
+                    wordDiv.style.flexWrap = 'wrap';
+                    wordDiv.style.justifyContent = 'center';
+                    words.forEach(word => {
+                        const option = document.createElement('div');
+                        option.className = 'option';
+                        option.textContent = word;
+                        option.onclick = () => selectOption(option, 'word', word);
+                        wordDiv.appendChild(option);
+                    });
+                    optionsContainer.appendChild(wordDiv);
+                }
+                startAnswerTimer();
+            }
+
+            // Запуск слайд-шоу в режиме тренировки, если включено Автоматически
+            if (isAutoPlay && isMemorizationMode) {
+                const delay = parseInt(document.getElementById('delay-select').value);
+                autoPlayTimeout = setTimeout(nextCard, delay);
+            }
+        }
+
+        // Получение случайных вариантов ответа
+        function getRandomOptions(sourceArray, key, correctValue, count) {
+            const options = [correctValue];
+            const available = sourceArray.filter(item => item[key] !== correctValue).map(item => item[key]);
+            for (let i = 0; i < count - 1; i++) {
+                if (available.length === 0) break;
+                const randomIndex = Math.floor(Math.random() * available.length);
+                options.push(available.splice(randomIndex, 1)[0]);
+            }
+            return options.sort(() => Math.random() - 0.5); // Перемешивание
+        }
+
+        // Выбор варианта
+        function selectOption(element, type, value) {
+            if (type === 'letter') {
+                if (selectedLetter) {
+                    selectedLetter.classList.remove('selected');
+                }
+                selectedLetter = element;
+                selectedLetter.classList.add('selected');
+            } else {
+                if (selectedWord) {
+                    selectedWord.classList.remove('selected');
+                }
+                selectedWord = element;
+                selectedWord.classList.add('selected');
+            }
+
+            const card = currentCards[currentCardIndex];
+            const isSingleDigit = 'digit' in card;
+            if (isSingleDigit && selectedLetter && selectedWord) {
+                checkAnswer();
+            } else if (!isSingleDigit && selectedWord) {
+                checkAnswer();
+            }
+        }
+
+        // Смена режима
+        function toggleMode() {
+            isMemorizationMode = !isMemorizationMode;
+            document.getElementById('mode-title').textContent = isMemorizationMode ? 'Тренировка' : 'Тестирование';
+            document.getElementById('mode-button').title = isMemorizationMode ? 'Переключить на Тестирование' : 'Переключить на Тренировку';
+            stopAutoPlay();
+            stopAnswerTimer();
+            showCard();
+        }
+
+        // Следующая карточка
+        function nextCard() {
+            const order = document.querySelector('input[name="order"]:checked').value;
+            if (order === 'random') {
+                currentCardIndex = Math.floor(Math.random() * currentCards.length);
+            } else {
+                currentCardIndex = (currentCardIndex + 1) % currentCards.length;
+            }
+            showCard();
+        }
+
+        // Проверка ответа
+        function checkAnswer() {
+            stopAnswerTimer();
+            const card = currentCards[currentCardIndex];
+            const isSingleDigit = 'digit' in card;
+            const correctLetter = isSingleDigit ? card.letter : null;
+            const correctWord = card.word;
+            const feedback = document.getElementById('feedback');
+            let isCorrect = false;
+
+            if (isSingleDigit) {
+                isCorrect = selectedLetter?.textContent === correctLetter && selectedWord?.textContent === correctWord;
+                feedback.textContent = isCorrect
+                    ? 'Правильно!'
+                    : `Неправильно. Правильный ответ: ${correctLetter}, ${correctWord}`;
+            } else {
+                isCorrect = selectedWord?.textContent === correctWord;
+                feedback.textContent = isCorrect
+                    ? 'Правильно!'
+                    : `Неправильно. Правильный ответ: ${correctWord}`;
+            }
+
+            feedback.style.color = isCorrect ? 'green' : 'red';
+            document.getElementById('options-container').innerHTML = '';
+            if (isAutoPlay && !isMemorizationMode) {
+                const delay = parseInt(document.getElementById('delay-select').value);
+                autoPlayTimeout = setTimeout(nextCard, delay);
+            }
+        }
+
+        // Таймер ответа
+        function startAnswerTimer() {
+            stopAnswerTimer();
+            if (!isMemorizationMode) {
+                const answerTime = parseInt(document.getElementById('answer-time-select').value);
+                answerTimeout = setTimeout(() => {
+                    const card = currentCards[currentCardIndex];
+                    const isSingleDigit = 'digit' in card;
+                    const correctLetter = isSingleDigit ? card.letter : null;
+                    const correctWord = card.word;
+                    const feedback = document.getElementById('feedback');
+                    feedback.textContent = isSingleDigit
+                        ? `Время вышло! Правильный ответ: ${correctLetter}, ${correctWord}`
+                        : `Время вышло! Правильный ответ: ${correctWord}`;
+                    feedback.style.color = 'red';
+                    document.getElementById('options-container').innerHTML = '';
+                    if (isAutoPlay) {
+                        const delay = parseInt(document.getElementById('delay-select').value);
+                        autoPlayTimeout = setTimeout(nextCard, delay);
+                    }
+                }, answerTime);
+            }
+        }
+
+        function stopAnswerTimer() {
+            if (answerTimeout) {
+                clearTimeout(answerTimeout);
+                answerTimeout = null;
+            }
+        }
+
+        // Управление автопроигрыванием
+        function toggleAutoPlay() {
+            isAutoPlay = !isAutoPlay;
+            const autoButton = document.getElementById('auto-button');
+            autoButton.textContent = isAutoPlay ? '⏸' : '▶';
+            autoButton.title = isAutoPlay ? 'Остановить автопроигрывание' : 'Включить автопроигрывание';
+            document.getElementById('next-button').style.display = isAutoPlay ? 'none' : 'block';
+            document.getElementById('delay-label').style.display = isAutoPlay ? 'inline-block' : 'none';
+            document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
+            if (isAutoPlay) {
+                if (isMemorizationMode) {
+                    // Запуск слайд-шоу в режиме тренировки
+                    const delay = parseInt(document.getElementById('delay-select').value);
+                    autoPlayTimeout = setTimeout(nextCard, delay);
+                } else {
+                    // Запуск проверки в режиме тестирования
+                    checkAnswer();
+                }
+            } else {
+                stopAutoPlay();
+                stopAnswerTimer();
+            }
+        }
+
+        function stopAutoPlay() {
+            isAutoPlay = false;
+            const autoButton = document.getElementById('auto-button');
+            autoButton.textContent = '▶';
+            autoButton.title = 'Включить автопроигрывание';
+            document.getElementById('next-button').style.display = 'block';
+            document.getElementById('delay-label').style.display = 'none';
+            document.getElementById('delay-select').style.display = 'none';
+            if (autoPlayTimeout) {
+                clearTimeout(autoPlayTimeout);
+                autoPlayTimeout = null;
+            }
+        }
+    </script>
+</body>
+</html>
