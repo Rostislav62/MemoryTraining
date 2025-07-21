@@ -16,6 +16,11 @@
             min-height: 100vh;
             margin: 0;
             padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-theme {
+            background-color: #1a1a1a;
+            color: #ffffff;
         }
         #card-container {
             background-color: white;
@@ -25,6 +30,11 @@
             text-align: center;
             max-width: 600px;
             width: 100%;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-theme #card-container {
+            background-color: #2d2d2d;
+            color: #ffffff;
         }
         #card-image {
             width: 300px;
@@ -49,36 +59,79 @@
             background-color: #4b5563;
             color: white;
         }
+        body.dark-theme #range-container .button {
+            background-color: #6b7280;
+        }
         #range-container .button:hover {
             background-color: #374151;
+        }
+        body.dark-theme #range-container .button:hover {
+            background-color: #4b5563;
         }
         #mode-button {
             background-color: #3b82f6;
             color: white;
         }
+        body.dark-theme #mode-button {
+            background-color: #60a5fa;
+        }
         #mode-button:hover {
             background-color: #2563eb;
+        }
+        body.dark-theme #mode-button:hover {
+            background-color: #3b82f6;
         }
         #next-button {
             background-color: #1f2937;
             color: white;
         }
+        body.dark-theme #next-button {
+            background-color: #374151;
+        }
         #next-button:hover {
             background-color: #111827;
+        }
+        body.dark-theme #next-button:hover {
+            background-color: #1f2937;
         }
         #auto-button {
             background-color: #22c55e;
             color: white;
         }
+        body.dark-theme #auto-button {
+            background-color: #16a34a;
+        }
         #auto-button:hover {
             background-color: #16a34a;
+        }
+        body.dark-theme #auto-button:hover {
+            background-color: #22c55e;
         }
         #stats-button {
             background-color: #8b5cf6;
             color: white;
         }
+        body.dark-theme #stats-button {
+            background-color: #a78bfa;
+        }
         #stats-button:hover {
             background-color: #7c3aed;
+        }
+        body.dark-theme #stats-button:hover {
+            background-color: #8b5cf6;
+        }
+        #theme-button {
+            background-color: #f59e0b;
+            color: white;
+        }
+        body.dark-theme #theme-button {
+            background-color: #d97706;
+        }
+        #theme-button:hover {
+            background-color: #d97706;
+        }
+        body.dark-theme #theme-button:hover {
+            background-color: #f59e0b;
         }
         #feedback {
             margin-top: 10px;
@@ -107,6 +160,10 @@
             border-bottom: 1px solid #ccc;
             padding-bottom: 5px;
             margin-bottom: 10px;
+            transition: border-color 0.3s;
+        }
+        body.dark-theme #mode-title {
+            border-bottom: 1px solid #666;
         }
         #button-container {
             display: flex;
@@ -128,9 +185,17 @@
             border-radius: 5px;
             cursor: pointer;
             user-select: none;
+            transition: background-color 0.3s;
+        }
+        body.dark-theme .option {
+            background-color: #4b5563;
+            color: #ffffff;
         }
         .option:hover {
             background-color: #d0d0d0;
+        }
+        body.dark-theme .option:hover {
+            background-color: #6b7280;
         }
         .option.selected {
             background-color: #4CAF50;
@@ -156,6 +221,11 @@
             max-height: 80%;
             overflow-y: auto;
             position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-theme #modal-content {
+            background-color: #2d2d2d;
+            color: #ffffff;
         }
         #modal-close {
             position: absolute;
@@ -163,6 +233,10 @@
             right: 10px;
             cursor: pointer;
             font-size: 24px;
+            transition: color 0.3s;
+        }
+        body.dark-theme #modal-close {
+            color: #ffffff;
         }
         #stats-table {
             width: 100%;
@@ -173,9 +247,26 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            transition: border-color 0.3s;
+        }
+        body.dark-theme #stats-table th, body.dark-theme #stats-table td {
+            border-color: #666;
         }
         #stats-table th {
             background-color: #f2f2f2;
+        }
+        body.dark-theme #stats-table th {
+            background-color: #4b5563;
+        }
+        #timer {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1f2937;
+            transition: color 0.3s;
+        }
+        body.dark-theme #timer {
+            color: #ffffff;
         }
         @media (max-width: 600px) {
             #card-header {
@@ -206,6 +297,9 @@
             }
             #stats-table {
                 font-size: 0.8rem;
+            }
+            #timer {
+                font-size: 1rem;
             }
         }
     </style>
@@ -251,12 +345,14 @@
         </div>
         <img id="card-image" src="" alt="Изображение">
         <div id="options-container"></div>
+        <div id="timer"></div>
         <div id="feedback"></div>
         <div id="button-container">
             <button class="button" id="mode-button" onclick="toggleMode()" title="Переключить на Тестирование">🔄</button>
             <button class="button" id="next-button" onclick="nextCard()" title="Следующая карточка">▶▶</button>
             <button class="button" id="auto-button" onclick="toggleAutoPlay()" title="Включить автопроигрывание">▶</button>
             <button class="button" id="stats-button" onclick="showStats()" title="Показать статистику">📊</button>
+            <button class="button" id="theme-button" onclick="toggleTheme()" title="Переключить тему">🌙</button>
         </div>
     </div>
     <div id="modal">
@@ -309,6 +405,7 @@
             history: JSON.parse(localStorage.getItem('statsHistory')) || []
         };
         let streak = 0;
+        let timerInterval = null;
 
         // Загрузка JSON
         fetch('../Flashcards/cards.json')
@@ -320,11 +417,31 @@
                 cards = data;
                 updateRange();
                 updateStatsDisplay();
+                loadTheme();
             })
             .catch(error => {
                 console.error('Ошибка загрузки JSON:', error);
                 document.getElementById('card-digit').textContent = 'Ошибка загрузки данных';
             });
+
+        // Переключение темы
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-button').textContent = isDark ? '☀️' : '🌙';
+        }
+
+        // Загрузка сохранённой темы
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-button').textContent = '☀️';
+            } else {
+                document.getElementById('theme-button').textContent = '🌙';
+            }
+        }
 
         // Обновление диапазона карточек
         function updateRange() {
@@ -354,14 +471,17 @@
             stats.timeout = 0;
             stats.attempts = [];
             streak = 0;
-            showCard();
             updateStatsDisplay();
             stopAutoPlay();
             stopAnswerTimer();
+            stopTimer();
+            showCard();
         }
 
         // Показ карточки
         function showCard() {
+            document.getElementById('options-container').innerHTML = '';
+            stopAnswerTimer();
             if (currentCards.length === 0) {
                 document.getElementById('card-digit').textContent = 'Нет карточек в диапазоне';
                 document.getElementById('card-text').textContent = '';
@@ -375,6 +495,7 @@
                 document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
                 document.getElementById('answer-time-label').style.display = 'none';
                 document.getElementById('answer-time-select').style.display = 'none';
+                document.getElementById('timer').textContent = '';
                 return;
             }
 
@@ -427,6 +548,7 @@
                     });
                     document.getElementById('options-container').appendChild(letterDiv);
                     document.getElementById('options-container').appendChild(wordDiv);
+                    startAnswerTimer();
                 } else {
                     const words = getRandomOptions(cards.double_digits, 'word', card.word, 5);
                     const wordDiv = document.createElement('div');
@@ -443,8 +565,8 @@
                         wordDiv.appendChild(option);
                     });
                     document.getElementById('options-container').appendChild(wordDiv);
+                    startAnswerTimer();
                 }
-                startAnswerTimer();
             }
 
             if (isAutoPlay && isMemorizationMode) {
@@ -504,6 +626,7 @@
             stats.attempts = [];
             streak = 0;
             updateStatsDisplay();
+            document.getElementById('options-container').innerHTML = '';
             showCard();
         }
 
@@ -515,6 +638,7 @@
             } else {
                 currentCardIndex = (currentCardIndex + 1) % currentCards.length;
             }
+            stopAnswerTimer();
             showCard();
         }
 
@@ -572,6 +696,7 @@
             stopAnswerTimer();
             if (!isMemorizationMode) {
                 const answerTime = parseInt(document.getElementById('answer-time-select').value);
+                startTimer(answerTime);
                 answerTimeout = setTimeout(() => {
                     const card = currentCards[currentCardIndex];
                     const isSingleDigit = 'digit' in card;
@@ -601,11 +726,35 @@
             }
         }
 
+        // Обратный отсчёт
+        function startTimer(duration) {
+            let timeLeft = duration / 1000;
+            document.getElementById('timer').textContent = `Осталось: ${timeLeft.toFixed(1)} сек`;
+            timerInterval = setInterval(() => {
+                timeLeft -= 0.1;
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    document.getElementById('timer').textContent = 'Время вышло!';
+                } else {
+                    document.getElementById('timer').textContent = `Осталось: ${timeLeft.toFixed(1)} сек`;
+                }
+            }, 100);
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            document.getElementById('timer').textContent = '';
+        }
+
         function stopAnswerTimer() {
             if (answerTimeout) {
                 clearTimeout(answerTimeout);
                 answerTimeout = null;
             }
+            stopTimer();
         }
 
         // Управление автопроигрыванием
