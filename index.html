@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Обучалка с карточками</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,32 +46,39 @@
             transition: background-color 0.2s;
         }
         #range-container .button {
-            background-color: #4b5563; /* gray-600 */
+            background-color: #4b5563;
             color: white;
         }
         #range-container .button:hover {
-            background-color: #374151; /* gray-700 */
+            background-color: #374151;
         }
         #mode-button {
-            background-color: #3b82f6; /* blue-500 */
+            background-color: #3b82f6;
             color: white;
         }
         #mode-button:hover {
-            background-color: #2563eb; /* blue-600 */
+            background-color: #2563eb;
         }
         #next-button {
-            background-color: #1f2937; /* gray-800 */
+            background-color: #1f2937;
             color: white;
         }
         #next-button:hover {
-            background-color: #111827; /* gray-900 */
+            background-color: #111827;
         }
         #auto-button {
-            background-color: #22c55e; /* green-500 */
+            background-color: #22c55e;
             color: white;
         }
         #auto-button:hover {
-            background-color: #16a34a; /* green-600 */
+            background-color: #16a34a;
+        }
+        #stats-button {
+            background-color: #8b5cf6;
+            color: white;
+        }
+        #stats-button:hover {
+            background-color: #7c3aed;
         }
         #feedback {
             margin-top: 10px;
@@ -128,6 +136,47 @@
             background-color: #4CAF50;
             color: white;
         }
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        #modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 80%;
+            overflow-y: auto;
+            position: relative;
+        }
+        #modal-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+        #stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        #stats-table th, #stats-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #stats-table th {
+            background-color: #f2f2f2;
+        }
         @media (max-width: 600px) {
             #card-header {
                 font-size: 3rem;
@@ -151,6 +200,12 @@
             #card-image {
                 width: 200px;
                 height: 200px;
+            }
+            #modal-content {
+                max-width: 95%;
+            }
+            #stats-table {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -201,6 +256,38 @@
             <button class="button" id="mode-button" onclick="toggleMode()" title="Переключить на Тестирование">🔄</button>
             <button class="button" id="next-button" onclick="nextCard()" title="Следующая карточка">▶▶</button>
             <button class="button" id="auto-button" onclick="toggleAutoPlay()" title="Включить автопроигрывание">▶</button>
+            <button class="button" id="stats-button" onclick="showStats()" title="Показать статистику">📊</button>
+        </div>
+    </div>
+    <div id="modal">
+        <div id="modal-content">
+            <span id="modal-close" onclick="closeModal()">×</span>
+            <h2>Статистика</h2>
+            <div id="current-stats">
+                <h3>Текущая сессия</h3>
+                <p id="stats-summary"></p>
+                <canvas id="stats-chart" style="max-width: 100%; height: 200px;"></canvas>
+            </div>
+            <div id="history-stats">
+                <h3>История</h3>
+                <canvas id="history-chart" style="max-width: 100%; height: 200px;"></canvas>
+                <table id="stats-table">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Правильно</th>
+                            <th>Неправильно</th>
+                            <th>Время истекло</th>
+                            <th>Точность</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body"></tbody>
+                </table>
+            </div>
+            <div style="margin-top: 10px;">
+                <button class="button bg-purple-500 hover:bg-purple-600" onclick="exportStats()" title="Экспорт в CSV">📤</button>
+                <button class="button bg-red-500 hover:bg-red-600" onclick="resetStats()" title="Сбросить статистику">🗑️</button>
+            </div>
         </div>
     </div>
 
@@ -214,6 +301,14 @@
         let answerTimeout = null;
         let selectedLetter = null;
         let selectedWord = null;
+        let stats = {
+            correct: 0,
+            incorrect: 0,
+            timeout: 0,
+            attempts: [],
+            history: JSON.parse(localStorage.getItem('statsHistory')) || []
+        };
+        let streak = 0;
 
         // Загрузка JSON
         fetch('Flashcards/cards.json')
@@ -224,6 +319,7 @@
             .then(data => {
                 cards = data;
                 updateRange();
+                updateStatsDisplay();
             })
             .catch(error => {
                 console.error('Ошибка загрузки JSON:', error);
@@ -248,13 +344,18 @@
                 currentCards = [...singleDigits, ...doubleDigits];
             }
 
-            // Перемешивание, если выбран случайный порядок
             if (order === 'random') {
                 currentCards = currentCards.sort(() => Math.random() - 0.5);
             }
 
             currentCardIndex = 0;
+            stats.correct = 0;
+            stats.incorrect = 0;
+            stats.timeout = 0;
+            stats.attempts = [];
+            streak = 0;
             showCard();
+            updateStatsDisplay();
             stopAutoPlay();
             stopAnswerTimer();
         }
@@ -294,12 +395,8 @@
             selectedLetter = null;
             selectedWord = null;
 
-            // Показ вариантов ответа в режиме тестирования
-            const optionsContainer = document.getElementById('options-container');
-            optionsContainer.innerHTML = '';
             if (!isMemorizationMode) {
                 if (isSingleDigit) {
-                    // Для 0-9: 5 букв и 5 слов в двух рядах
                     const letters = getRandomOptions(cards.single_digits, 'letter', card.letter, 5);
                     const words = getRandomOptions(cards.single_digits, 'word', card.word, 5);
                     const letterDiv = document.createElement('div');
@@ -328,10 +425,9 @@
                         option.onclick = () => selectOption(option, 'word', word);
                         wordDiv.appendChild(option);
                     });
-                    optionsContainer.appendChild(letterDiv);
-                    optionsContainer.appendChild(wordDiv);
+                    document.getElementById('options-container').appendChild(letterDiv);
+                    document.getElementById('options-container').appendChild(wordDiv);
                 } else {
-                    // Для 10-99: 5 слов в одном ряду
                     const words = getRandomOptions(cards.double_digits, 'word', card.word, 5);
                     const wordDiv = document.createElement('div');
                     wordDiv.className = 'options-row';
@@ -346,12 +442,11 @@
                         option.onclick = () => selectOption(option, 'word', word);
                         wordDiv.appendChild(option);
                     });
-                    optionsContainer.appendChild(wordDiv);
+                    document.getElementById('options-container').appendChild(wordDiv);
                 }
                 startAnswerTimer();
             }
 
-            // Запуск слайд-шоу в режиме тренировки, если включено Автоматически
             if (isAutoPlay && isMemorizationMode) {
                 const delay = parseInt(document.getElementById('delay-select').value);
                 autoPlayTimeout = setTimeout(nextCard, delay);
@@ -367,7 +462,7 @@
                 const randomIndex = Math.floor(Math.random() * available.length);
                 options.push(available.splice(randomIndex, 1)[0]);
             }
-            return options.sort(() => Math.random() - 0.5); // Перемешивание
+            return options.sort(() => Math.random() - 0.5);
         }
 
         // Выбор варианта
@@ -402,6 +497,13 @@
             document.getElementById('mode-button').title = isMemorizationMode ? 'Переключить на Тестирование' : 'Переключить на Тренировку';
             stopAutoPlay();
             stopAnswerTimer();
+            saveSessionStats();
+            stats.correct = 0;
+            stats.incorrect = 0;
+            stats.timeout = 0;
+            stats.attempts = [];
+            streak = 0;
+            updateStatsDisplay();
             showCard();
         }
 
@@ -424,6 +526,7 @@
             const correctLetter = isSingleDigit ? card.letter : null;
             const correctWord = card.word;
             const feedback = document.getElementById('feedback');
+            const startTime = Date.now();
             let isCorrect = false;
 
             if (isSingleDigit) {
@@ -439,6 +542,24 @@
             }
 
             feedback.style.color = isCorrect ? 'green' : 'red';
+            stats.attempts.push({
+                digit: isSingleDigit ? card.digit : card.number,
+                isCorrect,
+                selectedLetter: selectedLetter?.textContent,
+                selectedWord: selectedWord?.textContent,
+                time: Date.now() - startTime
+            });
+            stats[isCorrect ? 'correct' : 'incorrect']++;
+            streak = isCorrect ? streak + 1 : 0;
+            if (streak === 10) {
+                feedback.textContent += ' Отлично! 10 правильных подряд!';
+                setTimeout(() => {
+                    if (feedback.textContent.includes('10 правильных подряд')) {
+                        feedback.textContent = isCorrect ? 'Правильно!' : `Неправильно. Правильный ответ: ${correctWord}`;
+                    }
+                }, 2000);
+            }
+            updateStatsDisplay();
             document.getElementById('options-container').innerHTML = '';
             if (isAutoPlay && !isMemorizationMode) {
                 const delay = parseInt(document.getElementById('delay-select').value);
@@ -461,6 +582,16 @@
                         ? `Время вышло! Правильный ответ: ${correctLetter}, ${correctWord}`
                         : `Время вышло! Правильный ответ: ${correctWord}`;
                     feedback.style.color = 'red';
+                    stats.timeout++;
+                    stats.attempts.push({
+                        digit: isSingleDigit ? card.digit : card.number,
+                        isCorrect: false,
+                        selectedLetter: null,
+                        selectedWord: null,
+                        time: answerTime
+                    });
+                    streak = 0;
+                    updateStatsDisplay();
                     document.getElementById('options-container').innerHTML = '';
                     if (isAutoPlay) {
                         const delay = parseInt(document.getElementById('delay-select').value);
@@ -488,11 +619,9 @@
             document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
             if (isAutoPlay) {
                 if (isMemorizationMode) {
-                    // Запуск слайд-шоу в режиме тренировки
                     const delay = parseInt(document.getElementById('delay-select').value);
                     autoPlayTimeout = setTimeout(nextCard, delay);
                 } else {
-                    // Запуск проверки в режиме тестирования
                     checkAnswer();
                 }
             } else {
@@ -513,6 +642,185 @@
                 clearTimeout(autoPlayTimeout);
                 autoPlayTimeout = null;
             }
+        }
+
+        // Обновление статистики
+        function updateStatsDisplay() {
+            const total = stats.correct + stats.incorrect + stats.timeout;
+            const accuracy = total > 0 ? ((stats.correct / total) * 100).toFixed(1) : 0;
+            document.getElementById('feedback').textContent = total > 0
+                ? `Правильно: ${stats.correct}, Неправильно: ${stats.incorrect}, Время истекло: ${stats.timeout}, Точность: ${accuracy}%`
+                : '';
+        }
+
+        // Показ статистики
+        function showStats() {
+            saveSessionStats();
+            const modal = document.getElementById('modal');
+            const summary = document.getElementById('stats-summary');
+            const total = stats.correct + stats.incorrect + stats.timeout;
+            const accuracy = total > 0 ? ((stats.correct / total) * 100).toFixed(1) : 0;
+            summary.innerHTML = `
+                <p>Правильно: ${stats.correct}</p>
+                <p>Неправильно: ${stats.incorrect}</p>
+                <p>Время истекло: ${stats.timeout}</p>
+                <p>Точность: ${accuracy}%</p>
+                <p>Среднее время ответа: ${calculateAverageTime().toFixed(1)} мс</p>
+                <h4>Ошибки:</h4>
+                <ul>${generateErrorList()}</ul>
+            `;
+
+            // Круговая диаграмма
+            const ctx = document.getElementById('stats-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Правильно', 'Неправильно', 'Время истекло'],
+                    datasets: [{
+                        data: [stats.correct, stats.incorrect, stats.timeout],
+                        backgroundColor: ['#4CAF50', '#EF4444', '#F59E0B']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // История
+            const historyBody = document.getElementById('history-table-body');
+            historyBody.innerHTML = '';
+            stats.history.forEach((session, index) => {
+                const sessionTotal = session.correct + session.incorrect + session.timeout;
+                const sessionAccuracy = sessionTotal > 0 ? ((session.correct / sessionTotal) * 100).toFixed(1) : 0;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(session.date).toLocaleString()}</td>
+                    <td>${session.correct}</td>
+                    <td>${session.incorrect}</td>
+                    <td>${session.timeout}</td>
+                    <td>${sessionAccuracy}%</td>
+                `;
+                historyBody.appendChild(row);
+            });
+
+            // Линейный график истории
+            const historyCtx = document.getElementById('history-chart').getContext('2d');
+            const historyData = stats.history.map(session => {
+                const sessionTotal = session.correct + session.incorrect + session.timeout;
+                return sessionTotal > 0 ? (session.correct / sessionTotal) * 100 : 0;
+            });
+            new Chart(historyCtx, {
+                type: 'line',
+                data: {
+                    labels: stats.history.map((_, i) => `Сессия ${i + 1}`),
+                    datasets: [{
+                        label: 'Точность (%)',
+                        data: historyData,
+                        borderColor: '#3B82F6',
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+
+            modal.style.display = 'flex';
+        }
+
+        // Закрытие модального окна
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+            const ctx = document.getElementById('stats-chart').getContext('2d');
+            ctx.canvas.parentNode.removeChild(ctx.canvas);
+            const newCanvas = document.createElement('canvas');
+            newCanvas.id = 'stats-chart';
+            newCanvas.style.maxWidth = '100%';
+            newCanvas.style.height = '200px';
+            document.getElementById('current-stats').appendChild(newCanvas);
+            const historyCtx = document.getElementById('history-chart').getContext('2d');
+            historyCtx.canvas.parentNode.removeChild(historyCtx.canvas);
+            const newHistoryCanvas = document.createElement('canvas');
+            newHistoryCanvas.id = 'history-chart';
+            newHistoryCanvas.style.maxWidth = '100%';
+            newHistoryCanvas.style.height = '200px';
+            document.getElementById('history-stats').insertBefore(newHistoryCanvas, document.getElementById('stats-table'));
+        }
+
+        // Среднее время ответа
+        function calculateAverageTime() {
+            const times = stats.attempts.map(attempt => attempt.time).filter(time => time !== undefined);
+            return times.length > 0 ? times.reduce((sum, time) => sum + time, 0) / times.length : 0;
+        }
+
+        // Список ошибок
+        function generateErrorList() {
+            const errors = stats.attempts.filter(attempt => !attempt.isCorrect);
+            const errorMap = {};
+            errors.forEach(attempt => {
+                const key = attempt.digit;
+                if (!errorMap[key]) {
+                    errorMap[key] = { count: 0, details: [] };
+                }
+                errorMap[key].count++;
+                errorMap[key].details.push(`Выбрано: ${attempt.selectedLetter || '-'}, ${attempt.selectedWord || '-'}`);
+            });
+            return Object.entries(errorMap).map(([digit, data]) => `
+                <li>Цифра ${digit}: ${data.count} ошиб${data.count === 1 ? 'ка' : 'ки'} (${data.details.join('; ')})</li>
+            `).join('');
+        }
+
+        // Сохранение статистики сессии
+        function saveSessionStats() {
+            const total = stats.correct + stats.incorrect + stats.timeout;
+            if (total > 0) {
+                stats.history.push({
+                    date: new Date().toISOString(),
+                    correct: stats.correct,
+                    incorrect: stats.incorrect,
+                    timeout: stats.timeout,
+                    attempts: stats.attempts
+                });
+                if (stats.history.length > 10) {
+                    stats.history.shift();
+                }
+                localStorage.setItem('statsHistory', JSON.stringify(stats.history));
+            }
+        }
+
+        // Экспорт в CSV
+        function exportStats() {
+            const csv = [
+                'Дата,Правильно,Неправильно,Время истекло,Точность,Среднее время ответа (мс)',
+                ...stats.history.map(session => {
+                    const total = session.correct + session.incorrect + session.timeout;
+                    const accuracy = total > 0 ? ((session.correct / total) * 100).toFixed(1) : 0;
+                    const avgTime = session.attempts.map(a => a.time).filter(t => t !== undefined).reduce((sum, t) => sum + t, 0) / session.attempts.length || 0;
+                    return `${new Date(session.date).toLocaleString()},${session.correct},${session.incorrect},${session.timeout},${accuracy},${avgTime.toFixed(1)}`;
+                })
+            ].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'stats.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Сброс статистики
+        function resetStats() {
+            stats.history = [];
+            localStorage.removeItem('statsHistory');
+            stats.correct = 0;
+            stats.incorrect = 0;
+            stats.timeout = 0;
+            stats.attempts = [];
+            streak = 0;
+            updateStatsDisplay();
+            closeModal();
         }
     </script>
 </body>
