@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flashcard Training</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="card-container" class="container mx-auto p-4 flex flex-col items-center">
-        <div id="header-container" class="flex items-center justify-between mb-4 w-full">
+    <div id="card-container">
+        <div id="header-container" class="flex items-center justify-between mb-4 w-full px-4">
             <button id="menu-button" class="button" onclick="toggleMenu()" title="Open menu">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -23,7 +22,7 @@
             <span id="card-digit" class="text-4xl"></span>
             <span id="card-text" class="text-2xl"></span>
         </div>
-        <img id="card-image" src="" alt="Card image" class="mb-4 max-w-full h-auto">
+        <img id="card-image" src="" alt="Card image" class="mb-4">
         <div id="options-container" class="mb-4"></div>
         <div id="feedback" class="mb-4"></div>
         <div id="button-container" class="flex gap-4">
@@ -38,7 +37,7 @@
             <div class="menu-item" onclick="resetSettings()" data-i18n="reset_settings"></div>
             <div class="menu-item" onclick="showExportImportModal()" data-i18n="export_import_settings"></div>
             <div class="menu-item" onclick="showLanguageModal()" data-i18n="language"></div>
-            <div class="menu-item" onclick="toggleTheme()" data-i18n="dark_theme"></div>
+            <div class="menu-item" id="theme-button" onclick="toggleTheme()" data-i18n="dark_theme"></div>
             <div class="menu-item" onclick="showStats()" data-i18n="statistics"></div>
             <div class="menu-item" onclick="showInstructionsModal()" data-i18n="instructions"></div>
             <div class="menu-item" onclick="showAboutModal()" data-i18n="about"></div>

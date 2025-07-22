@@ -1,277 +1,196 @@
-/* General styles for the flashcard application */
+/* Базовые стили для всего приложения */
 body {
+    margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
+    transition: background-color 0.3s;
+}
+
+body.dark-theme {
+    background-color: #1a202c;
+    color: #e2e8f0;
+}
+
+/* Полноэкранная панель с карточками */
+#card-container {
+    width: 100%;
+    height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    transition: background-color 0.3s, color 0.3s;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow: auto;
 }
 
-/* Dark theme styles */
-body.dark-theme {
-    background-color: #1a1a1a;
-    color: #ffffff;
-}
-
-/* Main card container */
-#card-container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    max-width: 600px;
-    width: 100%;
-    transition: background-color 0.3s, color 0.3s;
-}
-body.dark-theme #card-container {
-    background-color: #2d2d2d;
-    color: #ffffff;
-}
-
-/* Header container */
-#header-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-}
-
-/* Mode title */
+/* Заголовок */
 #mode-title {
     font-size: 2rem;
     font-weight: bold;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 5px;
-    flex: 1;
-    text-align: center;
-    transition: border-color 0.3s;
-}
-body.dark-theme #mode-title {
-    border-bottom: 1px solid #666;
 }
 
-/* Hamburger menu button */
-#menu-button {
-    width: 40px;
-    height: 40px;
-    background-color: #3b82f6;
-    color: white;
-    border-radius: 6px;
+/* Таймер */
+#timer {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+/* Контейнер для цифры и текста */
+#card-header {
     display: flex;
-    align-items: center;
+    gap: 1rem;
     justify-content: center;
-}
-body.dark-theme #menu-button {
-    background-color: #60a5fa;
-}
-#menu-button:hover {
-    background-color: #2563eb;
-}
-body.dark-theme #menu-button:hover {
-    background-color: #3b82f6;
+    margin-bottom: 1rem;
 }
 
-/* Card image */
+#card-digit {
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+#card-text {
+    font-size: 2rem;
+}
+
+/* Изображение карточки */
 #card-image {
-    width: 300px;
-    height: 300px;
+    max-width: 100%;
+    height: auto;
     object-fit: contain;
-    display: block;
-    margin: 10px auto;
+    max-height: 40vh; /* Ограничение высоты изображения */
+    margin-bottom: 1rem;
 }
 
-/* General button styles */
-.button {
+/* Контейнер для вариантов ответа */
+#options-container {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.options-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
     justify-content: center;
-    border-radius: 6px;
+}
+
+.option {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
     cursor: pointer;
-    touch-action: manipulation;
+    background-color: #fff;
     transition: background-color 0.2s;
 }
 
-/* Large buttons for modals and theme */
-.large-button {
-    width: 120px;
-    height: 80px;
-    font-size: 1rem;
-    padding: 10px;
-    text-align: center;
+.option:hover {
+    background-color: #e0e0e0;
 }
 
-/* Mode button styles */
-#mode-button {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    background-color: #3b82f6;
-    color: white;
-}
-body.dark-theme #mode-button {
-    background-color: #60a5fa;
-}
-#mode-button:hover {
-    background-color: #2563eb;
-}
-body.dark-theme #mode-button:hover {
-    background-color: #3b82f6;
+.option.selected {
+    background-color: #4caf50;
+    color: #fff;
 }
 
-/* Next card button styles */
-#next-button {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    background-color: #1f2937;
-    color: white;
-}
-body.dark-theme #next-button {
-    background-color: #374151;
-}
-#next-button:hover {
-    background-color: #111827;
-}
-body.dark-theme #next-button:hover {
-    background-color: #1f2937;
+body.dark-theme .option {
+    background-color: #2d3748;
+    border-color: #4a5568;
 }
 
-/* Auto-play button styles */
-#auto-button {
-    width: 40px;
-    height: 40px;
-    font-size: 20px;
-    background-color: #22c55e;
-    color: white;
-}
-body.dark-theme #auto-button {
-    background-color: #16a34a;
-}
-#auto-button:hover {
-    background-color: #16a34a;
-}
-body.dark-theme #auto-button:hover {
-    background-color: #22c55e;
+body.dark-theme .option:hover {
+    background-color: #4a5568;
 }
 
-/* Theme button styles */
-#theme-button {
-    background-color: #f59e0b;
-    color: white;
-}
-body.dark-theme #theme-button {
-    background-color: #d97706;
-}
-#theme-button:hover {
-    background-color: #d97706;
-}
-body.dark-theme #theme-button:hover {
-    background-color: #f59e0b;
+body.dark-theme .option.selected {
+    background-color: #68d391;
+    color: #1a202c;
 }
 
-/* Feedback display */
+/* Обратная связь */
 #feedback {
-    margin-top: 10px;
-    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
 }
 
-/* Card header (digit and text) */
-#card-header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    font-size: 5rem;
-    font-weight: bold;
-    flex-wrap: wrap;
-}
-
-/* Button container */
+/* Кнопки управления */
 #button-container {
     display: flex;
-    justify-content: center;
-    gap: 5px;
-    flex-wrap: wrap;
-    margin-top: 10px;
+    gap: 1rem;
 }
 
-/* Options container for multiple-choice */
-#options-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-/* Option styles */
-.option {
-    padding: 8px 16px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
+.button {
+    padding: 0.75rem;
+    min-width: 48px;
+    min-height: 48px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4caf50;
+    color: #fff;
     cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s;
-}
-body.dark-theme .option {
-    background-color: #4b5563;
-    color: #ffffff;
-}
-.option:hover {
-    background-color: #d0d0d0;
-}
-body.dark-theme .option:hover {
-    background-color: #6b7280;
-}
-.option.selected {
-    background-color: #4CAF50;
-    color: white;
+    font-size: 1.25rem;
+    transition: background-color 0.2s;
 }
 
-/* Sidebar styles */
+.button:hover {
+    background-color: #45a049;
+}
+
+body.dark-theme .button {
+    background-color: #68d391;
+    color: #1a202c;
+}
+
+body.dark-theme .button:hover {
+    background-color: #5ab885;
+}
+
+/* Боковое меню */
 .sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 70%;
-    max-width: 300px;
+    width: 250px;
     height: 100%;
-    background-color: #e5e7eb;
+    background-color: #fff;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
     z-index: 1000;
 }
-body.dark-theme .sidebar {
-    background-color: #374151;
-    color: #ffffff;
-}
+
 .sidebar.active {
     transform: translateX(0);
 }
-#sidebar-content {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.menu-item {
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-.menu-item:hover {
-    background-color: #d1d5db;
-}
-body.dark-theme .menu-item:hover {
-    background-color: #4b5563;
+
+body.dark-theme .sidebar {
+    background-color: #2d3748;
 }
 
-/* Modal styles */
+#sidebar-content {
+    padding: 1rem;
+}
+
+.menu-item {
+    padding: 0.5rem;
+    cursor: pointer;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.menu-item:hover {
+    background-color: #e0e0e0;
+}
+
+body.dark-theme .menu-item {
+    border-bottom-color: #4a5568;
+}
+
+body.dark-theme .menu-item:hover {
+    background-color: #4a5568;
+}
+
+/* Модальное окно */
 .modal {
     display: none;
     position: fixed;
@@ -280,136 +199,74 @@ body.dark-theme .menu-item:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
+
 .modal-content {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
-    width: 95%;
-    max-height: 80%;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    max-width: 90%;
+    max-height: 80vh;
     overflow-y: auto;
-    position: relative;
-    transition: background-color 0.3s, color 0.3s;
 }
+
 body.dark-theme .modal-content {
-    background-color: #2d2d2d;
-    color: #ffffff;
-}
-.modal-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 24px;
-    transition: color 0.3s;
-}
-body.dark-theme .modal-close {
-    color: #ffffff;
-}
-.modal-section {
-    margin: 10px 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    align-items: center;
-}
-.modal-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    background-color: #2d3748;
+    color: #e2e8f0;
 }
 
-/* Statistics table */
-#stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-#stats-table th, #stats-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-    transition: border-color 0.3s;
-}
-body.dark-theme #stats-table th, body.dark-theme #stats-table td {
-    border-color: #666;
-}
-#stats-table th {
-    background-color: #f2f2f2;
-}
-body.dark-theme #stats-table th {
-    background-color: #4b5563;
-}
-
-/* Timer display */
-#timer {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #1f2937;
-    text-align: center;
-    margin-bottom: 10px;
-    transition: color 0.3s;
-}
-body.dark-theme #timer {
-    color: #ffffff;
-}
-
-/* Input styles */
-input[type="number"] {
-    background-color: white;
-    color: #1f2937;
-    border: 1px solid #ccc;
-    padding: 5px;
-    border-radius: 4px;
-}
-body.dark-theme input[type="number"] {
-    background-color: #4b5563;
-    color: #ffffff;
-    border: 1px solid #666;
-}
-
-/* Mobile-specific styles */
-@media (max-width: 600px) {
-    #card-header {
-        font-size: 3rem;
-    }
+/* Адаптивность для мобильных устройств */
+@media (max-width: 640px) {
     #mode-title {
         font-size: 1.5rem;
     }
-    .button:not(.large-button) {
-        width: 36px;
-        height: 36px;
-        font-size: 18px;
+    #card-digit {
+        font-size: 2.5rem;
     }
-    .large-button {
-        width: 100px;
-        height: 60px;
-        font-size: 0.9rem;
-    }
-    .option {
-        padding: 6px 12px;
-        font-size: 0.9rem;
+    #card-text {
+        font-size: 1.25rem;
     }
     #card-image {
-        width: 200px;
-        height: 200px;
+        max-height: 30vh; /* Меньше высота изображения на мобильных */
     }
-    .modal-content {
-        max-width: 90%;
-        padding: 15px;
-    }
-    #stats-table {
-        font-size: 0.8rem;
-    }
-    #timer {
+    .button {
+        padding: 0.5rem;
+        min-width: 44px;
+        min-height: 44px;
         font-size: 1rem;
     }
-    #menu-button {
-        width: 36px;
-        height: 36px;
+    .sidebar {
+        width: 80%;
     }
+    .modal-content {
+        max-width: 95%;
+        padding: 0.5rem;
+    }
+}
+
+/* Стили для статистики */
+#stats-summary p {
+    margin: 0.5rem 0;
+}
+
+#stats-chart, #history-chart {
+    max-width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+body.dark-theme th, body.dark-theme td {
+    border-color: #4a5568;
 }
