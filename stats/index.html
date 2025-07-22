@@ -3,988 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Обучалка с карточками</title>
+    <title>Flashcard Training</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.dark-theme {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-        #card-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.dark-theme #card-container {
-            background-color: #2d2d2d;
-            color: #ffffff;
-        }
-        #card-image {
-            width: 300px;
-            height: 300px;
-            object-fit: contain;
-            display: block;
-            margin: 10px auto;
-        }
-        .button {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            touch-action: manipulation;
-            transition: background-color 0.2s;
-        }
-        #range-container .button {
-            background-color: #4b5563;
-            color: white;
-        }
-        body.dark-theme #range-container .button {
-            background-color: #6b7280;
-        }
-        #range-container .button:hover {
-            background-color: #374151;
-        }
-        body.dark-theme #range-container .button:hover {
-            background-color: #4b5563;
-        }
-        #mode-button {
-            background-color: #3b82f6;
-            color: white;
-        }
-        body.dark-theme #mode-button {
-            background-color: #60a5fa;
-        }
-        #mode-button:hover {
-            background-color: #2563eb;
-        }
-        body.dark-theme #mode-button:hover {
-            background-color: #3b82f6;
-        }
-        #next-button {
-            background-color: #1f2937;
-            color: white;
-        }
-        body.dark-theme #next-button {
-            background-color: #374151;
-        }
-        #next-button:hover {
-            background-color: #111827;
-        }
-        body.dark-theme #next-button:hover {
-            background-color: #1f2937;
-        }
-        #auto-button {
-            background-color: #22c55e;
-            color: white;
-        }
-        body.dark-theme #auto-button {
-            background-color: #16a34a;
-        }
-        #auto-button:hover {
-            background-color: #16a34a;
-        }
-        body.dark-theme #auto-button:hover {
-            background-color: #22c55e;
-        }
-        #stats-button {
-            background-color: #8b5cf6;
-            color: white;
-        }
-        body.dark-theme #stats-button {
-            background-color: #a78bfa;
-        }
-        #stats-button:hover {
-            background-color: #7c3aed;
-        }
-        body.dark-theme #stats-button:hover {
-            background-color: #8b5cf6;
-        }
-        #theme-button {
-            background-color: #f59e0b;
-            color: white;
-        }
-        body.dark-theme #theme-button {
-            background-color: #d97706;
-        }
-        #theme-button:hover {
-            background-color: #d97706;
-        }
-        body.dark-theme #theme-button:hover {
-            background-color: #f59e0b;
-        }
-        #feedback {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-        #range-container, #order-container, #delay-container {
-            margin: 10px 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        #card-header {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            font-size: 5rem;
-            font-weight: bold;
-            flex-wrap: wrap;
-        }
-        #mode-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-            margin-bottom: 10px;
-            transition: border-color 0.3s;
-        }
-        body.dark-theme #mode-title {
-            border-bottom: 1px solid #666;
-        }
-        #button-container {
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-        #options-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .option {
-            padding: 8px 16px;
-            background-color: #e0e0e0;
-            border-radius: 5px;
-            cursor: pointer;
-            user-select: none;
-            transition: background-color 0.3s;
-        }
-        body.dark-theme .option {
-            background-color: #4b5563;
-            color: #ffffff;
-        }
-        .option:hover {
-            background-color: #d0d0d0;
-        }
-        body.dark-theme .option:hover {
-            background-color: #6b7280;
-        }
-        .option.selected {
-            background-color: #4CAF50;
-            color: white;
-        }
-        #modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        #modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 90%;
-            max-height: 80%;
-            overflow-y: auto;
-            position: relative;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.dark-theme #modal-content {
-            background-color: #2d2d2d;
-            color: #ffffff;
-        }
-        #modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-            font-size: 24px;
-            transition: color 0.3s;
-        }
-        body.dark-theme #modal-close {
-            color: #ffffff;
-        }
-        #stats-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        #stats-table th, #stats-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-            transition: border-color 0.3s;
-        }
-        body.dark-theme #stats-table th, body.dark-theme #stats-table td {
-            border-color: #666;
-        }
-        #stats-table th {
-            background-color: #f2f2f2;
-        }
-        body.dark-theme #stats-table th {
-            background-color: #4b5563;
-        }
-        #timer {
-            margin-top: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #1f2937;
-            transition: color 0.3s;
-        }
-        body.dark-theme #timer {
-            color: #ffffff;
-        }
-
-        input[type="number"] {
-            background-color: white;
-            color: #1f2937;
-            border: 1px solid #ccc;
-            padding: 5px;
-            border-radius: 4px;
-        }
-        body.dark-theme input[type="number"] {
-            background-color: #4b5563;
-            color: #ffffff;
-            border: 1px solid #666;
-        }
-
-        @media (max-width: 600px) {
-            #card-header {
-                font-size: 3rem;
-            }
-            #mode-title {
-                font-size: 1.8rem;
-            }
-            #range-container .button, #button-container .button {
-                width: 40px;
-                height: 40px;
-                font-size: 18px;
-            }
-            #delay-container select {
-                font-size: 0.9rem;
-                padding: 5px;
-            }
-            .option {
-                padding: 6px 12px;
-                font-size: 0.9rem;
-            }
-            #card-image {
-                width: 200px;
-                height: 200px;
-            }
-            #modal-content {
-                max-width: 95%;
-            }
-            #stats-table {
-                font-size: 0.8rem;
-            }
-            #timer {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="card-container">
-        <h1 id="mode-title">Тренировка</h1>
-        <div id="range-container">
-            <label for="range-start">От:</label>
-            <input type="number" id="range-start" min="0" max="99" value="0">
-            <label for="range-end">До:</label>
-            <input type="number" id="range-end" min="0" max="99" value="9">
-            <button class="button" onclick="updateRange()" title="Обновить диапазон">↻</button>
+    <div id="card-container" class="container mx-auto p-4 flex flex-col items-center">
+        <div id="header-container" class="flex items-center justify-between mb-4 w-full">
+            <button id="menu-button" class="button" onclick="toggleMenu()" title="Open menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+            <h1 id="mode-title" class="flex-1 text-center">Тренировка</h1>
         </div>
-        <div id="order-container">
-            <label><input type="radio" name="order" value="sequential" checked> По порядку</label>
-            <label><input type="radio" name="order" value="random"> Случайно</label>
+        <div id="timer" class="mb-4"></div>
+        <div id="card-header" class="flex justify-center gap-4 mb-4">
+            <span id="card-digit" class="text-4xl"></span>
+            <span id="card-text" class="text-2xl"></span>
         </div>
-        <div id="delay-container">
-            <label for="delay-select" id="delay-label">Время показа (сек):</label>
-            <select id="delay-select">
-                <option value="500">0.5</option>
-                <option value="1000">1</option>
-                <option value="2000" selected>2</option>
-            </select>
-            <label for="answer-time-select" id="answer-time-label">Время ответа (сек):</label>
-            <select id="answer-time-select">
-                <option value="1000">1</option>
-                <option value="2000">2</option>
-                <option value="3000">3</option>
-                <option value="4000">4</option>
-                <option value="5000" selected>5</option>
-                <option value="6000">6</option>
-                <option value="7000">7</option>
-                <option value="8000">8</option>
-                <option value="9000">9</option>
-                <option value="10000">10</option>
-            </select>
-        </div>
-        <div id="card-header">
-            <span id="card-digit"></span>
-            <span id="card-text"></span>
-        </div>
-        <img id="card-image" src="" alt="Изображение">
-        <div id="options-container"></div>
-        <div id="timer"></div>
-        <div id="feedback"></div>
-        <div id="button-container">
-            <button class="button" id="mode-button" onclick="toggleMode()" title="Переключить на Тестирование">🔄</button>
-            <button class="button" id="next-button" onclick="nextCard()" title="Следующая карточка">▶▶</button>
-            <button class="button" id="auto-button" onclick="toggleAutoPlay()" title="Включить автопроигрывание">▶</button>
-            <button class="button" id="stats-button" onclick="showStats()" title="Показать статистику">📊</button>
-            <button class="button" id="theme-button" onclick="toggleTheme()" title="Переключить тему">🌙</button>
+        <img id="card-image" src="" alt="Card image" class="mb-4 max-w-full h-auto">
+        <div id="options-container" class="mb-4"></div>
+        <div id="feedback" class="mb-4"></div>
+        <div id="button-container" class="flex gap-4">
+            <button class="button" id="mode-button" onclick="toggleMode()" title="Switch to Testing">🔄</button>
+            <button class="button" id="next-button" onclick="nextCard()" title="Next card">▶▶</button>
+            <button class="button" id="auto-button" onclick="toggleAutoPlay()" title="Start auto-play">▶</button>
         </div>
     </div>
-    <div id="modal">
-        <div id="modal-content">
-            <span id="modal-close" onclick="closeModal()">×</span>
-            <h2>Статистика</h2>
-            <div id="current-stats">
-                <h3>Текущая сессия</h3>
-                <p id="stats-summary"></p>
-                <canvas id="stats-chart" style="max-width: 100%; height: 200px;"></canvas>
-            </div>
-            <div id="history-stats">
-                <h3>История</h3>
-                <canvas id="history-chart" style="max-width: 100%; height: 200px;"></canvas>
-                <table id="stats-table">
-                    <thead>
-                        <tr>
-                            <th>Дата</th>
-                            <th>Правильно</th>
-                            <th>Неправильно</th>
-                            <th>Время истекло</th>
-                            <th>Точность</th>
-                        </tr>
-                    </thead>
-                    <tbody id="history-table-body"></tbody>
-                </table>
-            </div>
-            <div style="margin-top: 10px;">
-                <button class="button bg-purple-500 hover:bg-purple-600" onclick="exportStats()" title="Экспорт в CSV">📤</button>
-                <button class="button bg-red-500 hover:bg-red-600" onclick="resetStats()" title="Сбросить статистику">🗑️</button>
-            </div>
+    <div id="sidebar" class="sidebar">
+        <div id="sidebar-content">
+            <div class="menu-item" onclick="showSettingsModal()" data-i18n="settings"></div>
+            <div class="menu-item" onclick="resetSettings()" data-i18n="reset_settings"></div>
+            <div class="menu-item" onclick="showExportImportModal()" data-i18n="export_import_settings"></div>
+            <div class="menu-item" onclick="showLanguageModal()" data-i18n="language"></div>
+            <div class="menu-item" onclick="toggleTheme()" data-i18n="dark_theme"></div>
+            <div class="menu-item" onclick="showStats()" data-i18n="statistics"></div>
+            <div class="menu-item" onclick="showInstructionsModal()" data-i18n="instructions"></div>
+            <div class="menu-item" onclick="showAboutModal()" data-i18n="about"></div>
         </div>
     </div>
+    <div id="modal" class="modal">
+        <div id="modal-content" class="modal-content"></div>
+    </div>
 
-    <script>
-        let cards = { single_digits: [], double_digits: [] };
-        let currentCardIndex = 0;
-        let currentCards = [];
-        let isMemorizationMode = true;
-        let isAutoPlay = false;
-        let autoPlayTimeout = null;
-        let answerTimeout = null;
-        let selectedLetter = null;
-        let selectedWord = null;
-        let stats = {
-            correct: 0,
-            incorrect: 0,
-            timeout: 0,
-            attempts: [],
-            history: JSON.parse(localStorage.getItem('statsHistory')) || []
-        };
-        let streak = 0;
-        let timerInterval = null;
+    <template id="settings-modal-template">
+        <div class="p-4">
+            <h2 data-i18n="settings">Settings</h2>
+            <div class="mb-4">
+                <label data-i18n="range_from">From:</label>
+                <input id="range-start" type="number" min="0" max="99" class="border p-1">
+                <label data-i18n="range_to">To:</label>
+                <input id="range-end" type="number" min="0" max="99" class="border p-1">
+            </div>
+            <div class="mb-4">
+                <label><input type="radio" name="order" value="sequential" checked> <span data-i18n="sequential">Sequential</span></label>
+                <label><input type="radio" name="order" value="random"> <span data-i18n="random">Random</span></label>
+            </div>
+            <div class="mb-4">
+                <label data-i18n="display_time">Display time (sec):</label>
+                <select id="delay-select" class="border p-1">
+                    <option value="1000">1</option>
+                    <option value="2000">2</option>
+                    <option value="3000">3</option>
+                    <option value="4000">4</option>
+                    <option value="5000">5</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <label data-i18n="answer_time">Answer time (sec):</label>
+                <select id="answer-time-select" class="border p-1">
+                    <option value="3000">3</option>
+                    <option value="5000">5</option>
+                    <option value="7000">7</option>
+                    <option value="10000">10</option>
+                </select>
+            </div>
+            <button onclick="updateRange()" data-i18n="update" class="button">Update</button>
+        </div>
+    </template>
+    <template id="language-modal-template">
+        <div class="p-4">
+            <h2 data-i18n="language">Language</h2>
+            <div class="mb-4">
+                <label><input type="radio" name="language" value="ru"> <span data-i18n="russian">Russian</span></label>
+                <label><input type="radio" name="language" value="en"> <span data-i18n="english">English</span></label>
+            </div>
+            <button onclick="changeLanguage()" data-i18n="apply" class="button">Apply</button>
+        </div>
+    </template>
+    <template id="export-import-modal-template">
+        <div class="p-4">
+            <h2 data-i18n="export_import_settings">Export/Import Settings</h2>
+            <button onclick="exportSettings()" data-i18n="export_settings" class="button mb-2">Export Settings</button>
+            <div>
+                <label data-i18n="import_settings">Import Settings:</label>
+                <input id="import-settings" type="file" accept=".json" class="mb-2">
+                <button onclick="importSettings()" data-i18n="import_settings" class="button">Import</button>
+            </div>
+        </div>
+    </template>
+    <template id="instructions-modal-template">
+        <div class="p-4">
+            <h2 data-i18n="instructions">Instructions</h2>
+            <p data-i18n="instructions_text">In training mode, memorize the digit, letter, word, and image. In testing mode, select the correct letter and word within a limited time.</p>
+        </div>
+    </template>
+    <template id="about-modal-template">
+        <div class="p-4">
+            <h2 data-i18n="about">About</h2>
+            <p data-i18n="about_text">Author: Rostislav\nThis application is designed to train memory by associating digits with letters, words, and images.</p>
+        </div>
+    </template>
+    <template id="stats-modal-template">
+        <div class="p-4">
+            <h2 data-i18n="statistics">Statistics</h2>
+            <h3 data-i18n="current_session">Current Session</h3>
+            <div id="stats-summary"></div>
+            <canvas id="stats-chart" class="mb-4"></canvas>
+            <h3 data-i18n="history">History</h3>
+            <table class="w-full mb-4">
+                <thead>
+                    <tr>
+                        <th data-i18n="date">Date</th>
+                        <th data-i18n="correct">Correct</th>
+                        <th data-i18n="incorrect">Incorrect</th>
+                        <th data-i18n="timeout">Timeout</th>
+                        <th data-i18n="accuracy">Accuracy</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table-body"></tbody>
+            </table>
+            <canvas id="history-chart" class="mb-4"></canvas>
+            <button onclick="exportStats()" data-i18n="export_csv" class="button mb-2">Export to CSV</button>
+            <button onclick="resetStats()" data-i18n="reset_stats" class="button">Reset Statistics</button>
+        </div>
+    </template>
 
-        // Загрузка JSON
-        fetch('../Flashcards/cards.json')
-            .then(response => {
-                if (!response.ok) throw new Error('Не удалось загрузить cards.json');
-                return response.json();
-            })
-            .then(data => {
-                cards = data;
-                updateRange();
-                updateStatsDisplay();
-                loadTheme();
-            })
-            .catch(error => {
-                console.error('Ошибка загрузки JSON:', error);
-                document.getElementById('card-digit').textContent = 'Ошибка загрузки данных';
-            });
-
-        // Переключение темы
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            document.getElementById('theme-button').textContent = isDark ? '☀️' : '🌙';
-        }
-
-        // Загрузка сохранённой темы
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                document.getElementById('theme-button').textContent = '☀️';
-            } else {
-                document.getElementById('theme-button').textContent = '🌙';
-            }
-        }
-
-        // Обновление диапазона карточек
-        function updateRange() {
-            const start = parseInt(document.getElementById('range-start').value);
-            const end = parseInt(document.getElementById('range-end').value);
-            const order = document.querySelector('input[name="order"]:checked').value;
-            currentCards = [];
-
-            if (start <= 9 && end <= 9) {
-                currentCards = cards.single_digits.slice(start, end + 1);
-            } else {
-                const singleDigits = start <= 9 ? cards.single_digits.slice(start, Math.min(end + 1, 10)) : [];
-                const doubleDigits = cards.double_digits.filter(card => {
-                    const num = parseInt(card.number);
-                    return num >= Math.max(start, 0) && num <= end;
-                });
-                currentCards = [...singleDigits, ...doubleDigits];
-            }
-
-            if (order === 'random') {
-                currentCards = currentCards.sort(() => Math.random() - 0.5);
-            }
-
-            currentCardIndex = 0;
-            stats.correct = 0;
-            stats.incorrect = 0;
-            stats.timeout = 0;
-            stats.attempts = [];
-            streak = 0;
-            updateStatsDisplay();
-            stopAutoPlay();
-            stopAnswerTimer();
-            stopTimer();
-            showCard();
-        }
-
-        // Показ карточки
-        function showCard() {
-            document.getElementById('options-container').innerHTML = '';
-            stopAnswerTimer();
-            if (currentCards.length === 0) {
-                document.getElementById('card-digit').textContent = 'Нет карточек в диапазоне';
-                document.getElementById('card-text').textContent = '';
-                document.getElementById('card-image').src = '';
-                document.getElementById('card-image').style.display = 'none';
-                document.getElementById('options-container').innerHTML = '';
-                document.getElementById('next-button').style.display = 'none';
-                document.getElementById('auto-button').style.display = 'block';
-                document.getElementById('feedback').textContent = '';
-                document.getElementById('delay-label').style.display = isAutoPlay ? 'inline-block' : 'none';
-                document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
-                document.getElementById('answer-time-label').style.display = 'none';
-                document.getElementById('answer-time-select').style.display = 'none';
-                document.getElementById('timer').textContent = '';
-                return;
-            }
-
-            const card = currentCards[currentCardIndex];
-            const isSingleDigit = 'digit' in card;
-            document.getElementById('card-digit').textContent = isSingleDigit ? card.digit : card.number;
-            document.getElementById('card-text').textContent = isMemorizationMode ? (isSingleDigit ? card.letter : card.word) : '';
-            const imagePath = isMemorizationMode ? `../images/${encodeURIComponent(card.image)}` : '';
-            document.getElementById('card-image').src = imagePath;
-            document.getElementById('card-image').style.display = isMemorizationMode ? 'block' : 'none';
-            document.getElementById('next-button').style.display = isAutoPlay ? 'none' : 'block';
-            document.getElementById('auto-button').style.display = 'block';
-            document.getElementById('delay-label').style.display = isAutoPlay ? 'inline-block' : 'none';
-            document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
-            document.getElementById('answer-time-label').style.display = isMemorizationMode ? 'none' : 'inline-block';
-            document.getElementById('answer-time-select').style.display = isMemorizationMode ? 'none' : 'inline-block';
-            document.getElementById('feedback').textContent = '';
-            selectedLetter = null;
-            selectedWord = null;
-
-            if (!isMemorizationMode) {
-                if (isSingleDigit) {
-                    const letters = getRandomOptions(cards.single_digits, 'letter', card.letter, 5);
-                    const words = getRandomOptions(cards.single_digits, 'word', card.word, 5);
-                    const letterDiv = document.createElement('div');
-                    letterDiv.className = 'options-row';
-                    letterDiv.style.display = 'flex';
-                    letterDiv.style.gap = '10px';
-                    letterDiv.style.flexWrap = 'wrap';
-                    letterDiv.style.justifyContent = 'center';
-                    letters.forEach(letter => {
-                        const option = document.createElement('div');
-                        option.className = 'option';
-                        option.textContent = letter;
-                        option.onclick = () => selectOption(option, 'letter', letter);
-                        letterDiv.appendChild(option);
-                    });
-                    const wordDiv = document.createElement('div');
-                    wordDiv.className = 'options-row';
-                    wordDiv.style.display = 'flex';
-                    wordDiv.style.gap = '10px';
-                    wordDiv.style.flexWrap = 'wrap';
-                    wordDiv.style.justifyContent = 'center';
-                    words.forEach(word => {
-                        const option = document.createElement('div');
-                        option.className = 'option';
-                        option.textContent = word;
-                        option.onclick = () => selectOption(option, 'word', word);
-                        wordDiv.appendChild(option);
-                    });
-                    document.getElementById('options-container').appendChild(letterDiv);
-                    document.getElementById('options-container').appendChild(wordDiv);
-                    startAnswerTimer();
-                } else {
-                    const words = getRandomOptions(cards.double_digits, 'word', card.word, 5);
-                    const wordDiv = document.createElement('div');
-                    wordDiv.className = 'options-row';
-                    wordDiv.style.display = 'flex';
-                    wordDiv.style.gap = '10px';
-                    wordDiv.style.flexWrap = 'wrap';
-                    wordDiv.style.justifyContent = 'center';
-                    words.forEach(word => {
-                        const option = document.createElement('div');
-                        option.className = 'option';
-                        option.textContent = word;
-                        option.onclick = () => selectOption(option, 'word', word);
-                        wordDiv.appendChild(option);
-                    });
-                    document.getElementById('options-container').appendChild(wordDiv);
-                    startAnswerTimer();
-                }
-            }
-
-            if (isAutoPlay && isMemorizationMode) {
-                const delay = parseInt(document.getElementById('delay-select').value);
-                autoPlayTimeout = setTimeout(nextCard, delay);
-            }
-        }
-
-        // Получение случайных вариантов ответа
-        function getRandomOptions(sourceArray, key, correctValue, count) {
-            const options = [correctValue];
-            const available = sourceArray.filter(item => item[key] !== correctValue).map(item => item[key]);
-            for (let i = 0; i < count - 1; i++) {
-                if (available.length === 0) break;
-                const randomIndex = Math.floor(Math.random() * available.length);
-                options.push(available.splice(randomIndex, 1)[0]);
-            }
-            return options.sort(() => Math.random() - 0.5);
-        }
-
-        // Выбор варианта
-        function selectOption(element, type, value) {
-            if (type === 'letter') {
-                if (selectedLetter) {
-                    selectedLetter.classList.remove('selected');
-                }
-                selectedLetter = element;
-                selectedLetter.classList.add('selected');
-            } else {
-                if (selectedWord) {
-                    selectedWord.classList.remove('selected');
-                }
-                selectedWord = element;
-                selectedWord.classList.add('selected');
-            }
-
-            const card = currentCards[currentCardIndex];
-            const isSingleDigit = 'digit' in card;
-            if (isSingleDigit && selectedLetter && selectedWord) {
-                checkAnswer();
-            } else if (!isSingleDigit && selectedWord) {
-                checkAnswer();
-            }
-        }
-
-        // Смена режима
-        function toggleMode() {
-            isMemorizationMode = !isMemorizationMode;
-            document.getElementById('mode-title').textContent = isMemorizationMode ? 'Тренировка' : 'Тестирование';
-            document.getElementById('mode-button').title = isMemorizationMode ? 'Переключить на Тестирование' : 'Переключить на Тренировку';
-            stopAutoPlay();
-            stopAnswerTimer();
-            saveSessionStats();
-            stats.correct = 0;
-            stats.incorrect = 0;
-            stats.timeout = 0;
-            stats.attempts = [];
-            streak = 0;
-            updateStatsDisplay();
-            document.getElementById('options-container').innerHTML = '';
-            showCard();
-        }
-
-        // Следующая карточка
-        function nextCard() {
-            const order = document.querySelector('input[name="order"]:checked').value;
-            if (order === 'random') {
-                currentCardIndex = Math.floor(Math.random() * currentCards.length);
-            } else {
-                currentCardIndex = (currentCardIndex + 1) % currentCards.length;
-            }
-            stopAnswerTimer();
-            showCard();
-        }
-
-        // Проверка ответа
-        function checkAnswer() {
-            stopAnswerTimer();
-            const card = currentCards[currentCardIndex];
-            const isSingleDigit = 'digit' in card;
-            const correctLetter = isSingleDigit ? card.letter : null;
-            const correctWord = card.word;
-            const feedback = document.getElementById('feedback');
-            const startTime = Date.now();
-            let isCorrect = false;
-
-            if (isSingleDigit) {
-                isCorrect = selectedLetter?.textContent === correctLetter && selectedWord?.textContent === correctWord;
-                feedback.textContent = isCorrect
-                    ? 'Правильно!'
-                    : `Неправильно. Правильный ответ: ${correctLetter}, ${correctWord}`;
-            } else {
-                isCorrect = selectedWord?.textContent === correctWord;
-                feedback.textContent = isCorrect
-                    ? 'Правильно!'
-                    : `Неправильно. Правильный ответ: ${correctWord}`;
-            }
-
-            feedback.style.color = isCorrect ? 'green' : 'red';
-            stats.attempts.push({
-                digit: isSingleDigit ? card.digit : card.number,
-                isCorrect,
-                selectedLetter: selectedLetter?.textContent,
-                selectedWord: selectedWord?.textContent,
-                time: Date.now() - startTime
-            });
-            stats[isCorrect ? 'correct' : 'incorrect']++;
-            streak = isCorrect ? streak + 1 : 0;
-            if (streak === 10) {
-                feedback.textContent += ' Отлично! 10 правильных подряд!';
-                setTimeout(() => {
-                    if (feedback.textContent.includes('10 правильных подряд')) {
-                        feedback.textContent = isCorrect ? 'Правильно!' : `Неправильно. Правильный ответ: ${correctWord}`;
-                    }
-                }, 2000);
-            }
-            updateStatsDisplay();
-            document.getElementById('options-container').innerHTML = '';
-            if (isAutoPlay && !isMemorizationMode) {
-                const delay = parseInt(document.getElementById('delay-select').value);
-                autoPlayTimeout = setTimeout(nextCard, delay);
-            }
-        }
-
-        // Таймер ответа
-        function startAnswerTimer() {
-            stopAnswerTimer();
-            if (!isMemorizationMode) {
-                const answerTime = parseInt(document.getElementById('answer-time-select').value);
-                startTimer(answerTime);
-                answerTimeout = setTimeout(() => {
-                    const card = currentCards[currentCardIndex];
-                    const isSingleDigit = 'digit' in card;
-                    const correctLetter = isSingleDigit ? card.letter : null;
-                    const correctWord = card.word;
-                    const feedback = document.getElementById('feedback');
-                    feedback.textContent = isSingleDigit
-                        ? `Время вышло! Правильный ответ: ${correctLetter}, ${correctWord}`
-                        : `Время вышло! Правильный ответ: ${correctWord}`;
-                    feedback.style.color = 'red';
-                    stats.timeout++;
-                    stats.attempts.push({
-                        digit: isSingleDigit ? card.digit : card.number,
-                        isCorrect: false,
-                        selectedLetter: null,
-                        selectedWord: null,
-                        time: answerTime
-                    });
-                    streak = 0;
-                    updateStatsDisplay();
-                    document.getElementById('options-container').innerHTML = '';
-                    if (isAutoPlay) {
-                        const delay = parseInt(document.getElementById('delay-select').value);
-                        autoPlayTimeout = setTimeout(nextCard, delay);
-                    }
-                }, answerTime);
-            }
-        }
-
-        // Обратный отсчёт
-        function startTimer(duration) {
-            let timeLeft = duration / 1000;
-            document.getElementById('timer').textContent = `Осталось: ${timeLeft.toFixed(1)} сек`;
-            timerInterval = setInterval(() => {
-                timeLeft -= 0.1;
-                if (timeLeft <= 0) {
-                    stopTimer();
-                    document.getElementById('timer').textContent = 'Время вышло!';
-                } else {
-                    document.getElementById('timer').textContent = `Осталось: ${timeLeft.toFixed(1)} сек`;
-                }
-            }, 100);
-        }
-
-        function stopTimer() {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            }
-            document.getElementById('timer').textContent = '';
-        }
-
-        function stopAnswerTimer() {
-            if (answerTimeout) {
-                clearTimeout(answerTimeout);
-                answerTimeout = null;
-            }
-            stopTimer();
-        }
-
-        // Управление автопроигрыванием
-        function toggleAutoPlay() {
-            isAutoPlay = !isAutoPlay;
-            const autoButton = document.getElementById('auto-button');
-            autoButton.textContent = isAutoPlay ? '⏸' : '▶';
-            autoButton.title = isAutoPlay ? 'Остановить автопроигрывание' : 'Включить автопроигрывание';
-            document.getElementById('next-button').style.display = isAutoPlay ? 'none' : 'block';
-            document.getElementById('delay-label').style.display = isAutoPlay ? 'inline-block' : 'none';
-            document.getElementById('delay-select').style.display = isAutoPlay ? 'inline-block' : 'none';
-            if (isAutoPlay) {
-                if (isMemorizationMode) {
-                    const delay = parseInt(document.getElementById('delay-select').value);
-                    autoPlayTimeout = setTimeout(nextCard, delay);
-                } else {
-                    checkAnswer();
-                }
-            } else {
-                stopAutoPlay();
-                stopAnswerTimer();
-            }
-        }
-
-        function stopAutoPlay() {
-            isAutoPlay = false;
-            const autoButton = document.getElementById('auto-button');
-            autoButton.textContent = '▶';
-            autoButton.title = 'Включить автопроигрывание';
-            document.getElementById('next-button').style.display = 'block';
-            document.getElementById('delay-label').style.display = 'none';
-            document.getElementById('delay-select').style.display = 'none';
-            if (autoPlayTimeout) {
-                clearTimeout(autoPlayTimeout);
-                autoPlayTimeout = null;
-            }
-        }
-
-        // Обновление статистики
-        function updateStatsDisplay() {
-            const total = stats.correct + stats.incorrect + stats.timeout;
-            const accuracy = total > 0 ? ((stats.correct / total) * 100).toFixed(1) : 0;
-            document.getElementById('feedback').textContent = total > 0
-                ? `Правильно: ${stats.correct}, Неправильно: ${stats.incorrect}, Время истекло: ${stats.timeout}, Точность: ${accuracy}%`
-                : '';
-        }
-
-        // Показ статистики
-        function showStats() {
-            saveSessionStats();
-            const modal = document.getElementById('modal');
-            const summary = document.getElementById('stats-summary');
-            const total = stats.correct + stats.incorrect + stats.timeout;
-            const accuracy = total > 0 ? ((stats.correct / total) * 100).toFixed(1) : 0;
-            summary.innerHTML = `
-                <p>Правильно: ${stats.correct}</p>
-                <p>Неправильно: ${stats.incorrect}</p>
-                <p>Время истекло: ${stats.timeout}</p>
-                <p>Точность: ${accuracy}%</p>
-                <p>Среднее время ответа: ${calculateAverageTime().toFixed(1)} мс</p>
-                <h4>Ошибки:</h4>
-                <ul>${generateErrorList()}</ul>
-            `;
-
-            // Круговая диаграмма
-            const ctx = document.getElementById('stats-chart').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Правильно', 'Неправильно', 'Время истекло'],
-                    datasets: [{
-                        data: [stats.correct, stats.incorrect, stats.timeout],
-                        backgroundColor: ['#4CAF50', '#EF4444', '#F59E0B']
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
-
-            // История
-            const historyBody = document.getElementById('history-table-body');
-            historyBody.innerHTML = '';
-            stats.history.forEach((session, index) => {
-                const sessionTotal = session.correct + session.incorrect + session.timeout;
-                const sessionAccuracy = sessionTotal > 0 ? ((session.correct / sessionTotal) * 100).toFixed(1) : 0;
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${new Date(session.date).toLocaleString()}</td>
-                    <td>${session.correct}</td>
-                    <td>${session.incorrect}</td>
-                    <td>${session.timeout}</td>
-                    <td>${sessionAccuracy}%</td>
-                `;
-                historyBody.appendChild(row);
-            });
-
-            // Линейный график истории
-            const historyCtx = document.getElementById('history-chart').getContext('2d');
-            const historyData = stats.history.map(session => {
-                const sessionTotal = session.correct + session.incorrect + session.timeout;
-                return sessionTotal > 0 ? (session.correct / sessionTotal) * 100 : 0;
-            });
-            new Chart(historyCtx, {
-                type: 'line',
-                data: {
-                    labels: stats.history.map((_, i) => `Сессия ${i + 1}`),
-                    datasets: [{
-                        label: 'Точность (%)',
-                        data: historyData,
-                        borderColor: '#3B82F6',
-                        fill: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: { y: { beginAtZero: true, max: 100 } }
-                }
-            });
-
-            modal.style.display = 'flex';
-        }
-
-        // Закрытие модального окна
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
-            const ctx = document.getElementById('stats-chart').getContext('2d');
-            ctx.canvas.parentNode.removeChild(ctx.canvas);
-            const newCanvas = document.createElement('canvas');
-            newCanvas.id = 'stats-chart';
-            newCanvas.style.maxWidth = '100%';
-            newCanvas.style.height = '200px';
-            document.getElementById('current-stats').appendChild(newCanvas);
-            const historyCtx = document.getElementById('history-chart').getContext('2d');
-            historyCtx.canvas.parentNode.removeChild(historyCtx.canvas);
-            const newHistoryCanvas = document.createElement('canvas');
-            newHistoryCanvas.id = 'history-chart';
-            newHistoryCanvas.style.maxWidth = '100%';
-            newHistoryCanvas.style.height = '200px';
-            document.getElementById('history-stats').insertBefore(newHistoryCanvas, document.getElementById('stats-table'));
-        }
-
-        // Среднее время ответа
-        function calculateAverageTime() {
-            const times = stats.attempts.map(attempt => attempt.time).filter(time => time !== undefined);
-            return times.length > 0 ? times.reduce((sum, time) => sum + time, 0) / times.length : 0;
-        }
-
-        // Список ошибок
-        function generateErrorList() {
-            const errors = stats.attempts.filter(attempt => !attempt.isCorrect);
-            const errorMap = {};
-            errors.forEach(attempt => {
-                const key = attempt.digit;
-                if (!errorMap[key]) {
-                    errorMap[key] = { count: 0, details: [] };
-                }
-                errorMap[key].count++;
-                errorMap[key].details.push(`Выбрано: ${attempt.selectedLetter || '-'}, ${attempt.selectedWord || '-'}`);
-            });
-            return Object.entries(errorMap).map(([digit, data]) => `
-                <li>Цифра ${digit}: ${data.count} ошиб${data.count === 1 ? 'ка' : 'ки'} (${data.details.join('; ')})</li>
-            `).join('');
-        }
-
-        // Сохранение статистики сессии
-        function saveSessionStats() {
-            const total = stats.correct + stats.incorrect + stats.timeout;
-            if (total > 0) {
-                stats.history.push({
-                    date: new Date().toISOString(),
-                    correct: stats.correct,
-                    incorrect: stats.incorrect,
-                    timeout: stats.timeout,
-                    attempts: stats.attempts
-                });
-                if (stats.history.length > 10) {
-                    stats.history.shift();
-                }
-                localStorage.setItem('statsHistory', JSON.stringify(stats.history));
-            }
-        }
-
-        // Экспорт в CSV
-        function exportStats() {
-            const csv = [
-                'Дата,Правильно,Неправильно,Время истекло,Точность,Среднее время ответа (мс)',
-                ...stats.history.map(session => {
-                    const total = session.correct + session.incorrect + session.timeout;
-                    const accuracy = total > 0 ? ((session.correct / total) * 100).toFixed(1) : 0;
-                    const avgTime = session.attempts.map(a => a.time).filter(t => t !== undefined).reduce((sum, t) => sum + t, 0) / session.attempts.length || 0;
-                    return `${new Date(session.date).toLocaleString()},${session.correct},${session.incorrect},${session.timeout},${accuracy},${avgTime.toFixed(1)}`;
-                })
-            ].join('\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'stats.csv';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        // Сброс статистики
-        function resetStats() {
-            stats.history = [];
-            localStorage.removeItem('statsHistory');
-            stats.correct = 0;
-            stats.incorrect = 0;
-            stats.timeout = 0;
-            stats.attempts = [];
-            streak = 0;
-            updateStatsDisplay();
-            closeModal();
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
