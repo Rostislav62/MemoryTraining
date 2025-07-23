@@ -808,6 +808,19 @@ function resetStats() {
     closeModal();
 }
 
+function loadCards() {
+    fetch(`Flashcards/cards_${currentLanguage}.json`)
+        .then(response => response.json())
+        .then(data => {
+            cards = data.filter(card => card.digit >= rangeStart && card.digit <= rangeEnd);
+            if (order === 'random') {
+                cards = shuffle(cards);
+            }
+            currentCardIndex = 0; // Сбрасываем индекс на начальную карточку
+            showCard();
+        });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Initializing application');
     loadLanguage();

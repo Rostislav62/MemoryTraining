@@ -11,10 +11,56 @@ body.dark-theme {
     color: #e2e8f0;
 }
 
-/* Полноэкранная панель с карточками */
-#card-container {
-    width: 100%;
+/* Главный контейнер */
+#main-container {
+    width: 60%;
     height: 100vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+}
+
+body.dark-theme #main-container {
+    background-color: #2d3748;
+}
+
+/* Верхняя полоса */
+#top-bar {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+
+body.dark-theme #top-bar {
+    background-color: #4a5568;
+}
+
+#menu-button {
+    margin-right: 1rem;
+    background-color: #e0e0e0; /* Цвет как у top-bar в светлой теме */
+    color: #000; /* Черные линии иконки в светлой теме */
+}
+
+body.dark-theme #menu-button {
+    background-color: #4a5568; /* Цвет как у top-bar в темной теме */
+    color: #fff; /* Белые линии иконки в темной теме */
+}
+
+#app-title {
+    font-size: 2rem;
+    font-weight: bold;
+    flex-grow: 1;
+    text-align: center;
+}
+
+/* Панель с карточками */
+#card-container {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,12 +68,28 @@ body.dark-theme {
     padding: 1rem;
     box-sizing: border-box;
     overflow: auto;
+    margin-top: 3.5rem; /* Отступ для top-bar */
 }
 
-/* Заголовок */
 #mode-title {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 640px) {
+    #main-container {
+        width: 100%;
+    }
+    #top-bar {
+        padding: 0.5rem 0.75rem;
+    }
+    #app-title {
+        font-size: 1.5rem;
+    }
+    #mode-title {
+        font-size: 1.25rem;
+    }
 }
 
 /* Таймер */
@@ -58,7 +120,7 @@ body.dark-theme {
     max-width: 100%;
     height: auto;
     object-fit: contain;
-    max-height: 40vh; /* Ограничение высоты изображения */
+    max-height: 40vh;
     margin-bottom: 1rem;
 }
 
@@ -151,22 +213,78 @@ body.dark-theme .button:hover {
 .sidebar {
     position: fixed;
     top: 0;
-    left: 0;
+    left: 20%; /* Выдвигается с левого края main-container (20% отступ слева) */
     width: 250px;
     height: 100%;
     background-color: #fff;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
-    z-index: 1000;
+    z-index: 999; /* Устанавливаем ниже main-container, чтобы меню уходило под него */
 }
 
 .sidebar.active {
     transform: translateX(0);
 }
 
+/* Боковое меню */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 20%; /* Выдвигается с левого края main-container (20% отступ слева) */
+    width: 250px;
+    height: 100%;
+    background-color: #fff;
+    transform: translateX(-100%); /* Уходит за левый край main-container */
+    transition: transform 0.3s ease-in-out;
+    z-index: 1001; /* Выше main-container, как модальное окно */
+}
+
 body.dark-theme .sidebar {
     background-color: #2d3748;
 }
+
+.sidebar.active {
+    transform: translateX(0);
+}
+
+/* На мобильных устройствах main-container занимает 100%, поэтому left: 0 */
+@media (max-width: 640px) {
+    .sidebar {
+        left: 0;
+        width: 80%;
+        z-index: 1001; /* На мобильных выше, как модальное окно */
+    }
+}
+
+/* Главный контейнер */
+#main-container {
+    z-index: 1000; /* Ниже sidebar */
+    position: relative;
+}
+
+/* Сохраняем существующие стили sidebar-content и menu-item */
+#sidebar-content {
+    padding: 1rem;
+}
+
+.menu-item {
+    padding: 0.5rem;
+    cursor: pointer;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.menu-item:hover {
+    background-color: #e0e0e0;
+}
+
+body.dark-theme .menu-item {
+    border-bottom-color: #4a5568;
+}
+
+body.dark-theme .menu-item:hover {
+    background-color: #4a5568;
+}
+
 
 #sidebar-content {
     padding: 1rem;
@@ -220,9 +338,6 @@ body.dark-theme .modal-content {
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 640px) {
-    #mode-title {
-        font-size: 1.5rem;
-    }
     #card-digit {
         font-size: 2.5rem;
     }
@@ -230,7 +345,7 @@ body.dark-theme .modal-content {
         font-size: 1.25rem;
     }
     #card-image {
-        max-height: 30vh; /* Меньше высота изображения на мобильных */
+        max-height: 30vh;
     }
     .button {
         padding: 0.5rem;
