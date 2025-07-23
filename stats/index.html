@@ -34,23 +34,44 @@
             </div>
         </div>
     </div>
-    <div id="sidebar" class="sidebar">
-        <div id="sidebar-content">
-            <div class="menu-item" onclick="showSettingsModal()" data-i18n="settings"></div>
-            <div class="menu-item" onclick="resetSettings()" data-i18n="reset_settings"></div>
-            <div class="menu-item" onclick="showExportImportModal()" data-i18n="export_import_settings"></div>
-            <div class="menu-item" onclick="showLanguageModal()" data-i18n="language"></div>
-            <div class="menu-item" id="theme-button" onclick="toggleTheme()" data-i18n="dark_theme"></div>
-            <div class="menu-item" onclick="showStats()" data-i18n="statistics"></div>
-            <div class="menu-item" onclick="showInstructionsModal()" data-i18n="instructions"></div>
-            <div class="menu-item" onclick="showAboutModal()" data-i18n="about"></div>
+<div id="sidebar" class="sidebar">
+    <div id="sidebar-header" class="flex items-center justify-between px-4 py-2">
+        <div class="flex items-center gap-2">
+            <img src="../icons/brain.png" alt="Brain Icon" class="w-8 h-8">
+            <span>SuperMemory</span>
+        </div>
+        <button id="theme-button" class="theme-button" onclick="toggleTheme()" title="Toggle theme">
+            <img id="theme-icon" src="../icons/moon.svg" alt="Moon Icon" class="w-6 h-6">
+        </button>
+    </div>
+    <div id="sidebar-content">
+        <div class="menu-item" onclick="showSettingsModal()">
+            <img src="../icons/settings.svg" alt="Settings Icon" class="menu-icon">
+            <span data-i18n="settings"></span>
+        </div>
+        <div class="menu-item" onclick="changeLanguage()">
+            <img src="../icons/language.svg" alt="Language Icon" class="menu-icon">
+            <span data-i18n="language"></span>
+        </div>
+        <div class="menu-item" onclick="showStats()">
+            <img src="../icons/statistics.svg" alt="Statistics Icon" class="menu-icon">
+            <span data-i18n="statistics"></span>
+        </div>
+        <div class="menu-item" onclick="showInstructionsModal()">
+            <img src="../icons/instructions.svg" alt="Instructions Icon" class="menu-icon">
+            <span data-i18n="instructions"></span>
+        </div>
+        <div class="menu-item" onclick="showAboutModal()">
+            <img src="../icons/about.svg" alt="About Icon" class="menu-icon">
+            <span data-i18n="about"></span>
         </div>
     </div>
+</div>
     <div id="modal" class="modal">
         <div id="modal-content" class="modal-content"></div>
     </div>
 
-    <template id="settings-modal-template">
+     <template id="settings-modal-template">
         <div class="p-4">
             <h2 data-i18n="settings">Settings</h2>
             <div class="mb-4">
@@ -82,17 +103,13 @@
                     <option value="10000">10</option>
                 </select>
             </div>
-            <button onclick="updateRange()" data-i18n="update" class="button">Update</button>
-        </div>
-    </template>
-    <template id="language-modal-template">
-        <div class="p-4">
-            <h2 data-i18n="language">Language</h2>
             <div class="mb-4">
-                <label><input type="radio" name="language" value="ru"> <span data-i18n="russian">Russian</span></label>
-                <label><input type="radio" name="language" value="en"> <span data-i18n="english">English</span></label>
+                <button onclick="resetSettings()" data-i18n="reset_settings" class="button">Reset Settings</button>
             </div>
-            <button onclick="changeLanguage()" data-i18n="apply" class="button">Apply</button>
+            <div class="mb-4">
+                <button onclick="showExportImportModal()" data-i18n="export_import_settings" class="button">Export/Import Settings</button>
+            </div>
+            <button onclick="updateRange()" data-i18n="update" class="button">Update</button>
         </div>
     </template>
     <template id="export-import-modal-template">

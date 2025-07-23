@@ -29,11 +29,9 @@ function loadLanguage() {
             const elements = document.querySelectorAll('[data-i18n]');
             elements.forEach(element => {
                 const key = element.getAttribute('data-i18n');
-                if (element.id === 'theme-button') {
-                    const isDark = document.body.classList.contains('dark-theme');
-                    element.textContent = translations[isDark ? 'light_theme' : 'dark_theme'] || 'Theme';
-                } else {
-                    element.textContent = translations[key] || element.textContent;
+                // Пропускаем theme-button, language-text и элементы без перевода
+                if (element.id !== 'theme-button' && element.id !== 'language-text' && translations[key]) {
+                    element.textContent = translations[key];
                 }
             });
             const modeTitle = document.getElementById('mode-title');
@@ -228,31 +226,29 @@ function showCard() {
 
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    fetch(`../i18n/${currentLanguage}.json`)
-        .then(response => response.json())
-        .then(translations => {
-            const themeButton = document.getElementById('theme-button');
-            if (themeButton) {
-                themeButton.textContent = translations[isDark ? 'light_theme' : 'dark_theme'] || 'Theme';
-            }
-        });
+    localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+    const themeIcon = document.getElementById('theme-icon');
+    if (themeIcon) {
+        themeIcon.src = document.body.classList.contains('dark-theme') ? '../icons/sun.svg' : '../icons/moon.svg';
+        themeIcon.alt = document.body.classList.contains('dark-theme') ? 'Sun Icon' : 'Moon Icon';
+    }
 }
 
 function loadTheme() {
     const savedTheme = localStorage.getItem('theme');
+    const themeIcon = document.getElementById('theme-icon');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
+        if (themeIcon) {
+            themeIcon.src = '../icons/sun.svg';
+            themeIcon.alt = 'Sun Icon';
+        }
+    } else {
+        if (themeIcon) {
+            themeIcon.src = '../icons/moon.svg';
+            themeIcon.alt = 'Moon Icon';
+        }
     }
-    fetch(`../i18n/${currentLanguage}.json`)
-        .then(response => response.json())
-        .then(translations => {
-            const themeButton = document.getElementById('theme-button');
-            if (themeButton) {
-                themeButton.textContent = translations[savedTheme === 'dark' ? 'light_theme' : 'dark_theme'] || 'Theme';
-            }
-        });
 }
 
 function showModal(templateId) {
@@ -356,11 +352,6 @@ function importSettings() {
     }
 }
 
-function showLanguageModal() {
-    showModal('language-modal-template');
-    const languageInput = document.querySelector(`input[name="language"][value="${currentLanguage}"]`);
-    if (languageInput) languageInput.checked = true;
-}
 
 function showExportImportModal() {
     showModal('export-import-modal-template');
@@ -375,14 +366,10 @@ function showAboutModal() {
 }
 
 function changeLanguage() {
-    const selectedLanguage = document.querySelector('input[name="language"]:checked')?.value;
-    if (selectedLanguage) {
-        console.log('Changing language to:', selectedLanguage);
-        currentLanguage = selectedLanguage;
-        localStorage.setItem('language', selectedLanguage);
-        closeModal();
-        loadLanguage();
-    }
+    currentLanguage = currentLanguage === 'ru' ? 'en' : 'ru';
+    localStorage.setItem('language', currentLanguage);
+    console.log('Changing language to:', currentLanguage);
+    loadLanguage();
 }
 
 function toggleMenu() {
@@ -825,6 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('Initializing application');
     loadLanguage();
 });
+
 
 document.addEventListener('click', function(e) {
     const sidebar = document.getElementById('sidebar');

@@ -256,21 +256,65 @@ body.dark-theme .sidebar {
     }
 }
 
-/* Главный контейнер */
-#main-container {
-    z-index: 1000; /* Ниже sidebar */
-    position: relative;
+/* Заголовочная полоса бокового меню */
+#sidebar-header {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
 }
 
-/* Сохраняем существующие стили sidebar-content и menu-item */
-#sidebar-content {
-    padding: 1rem;
+body.dark-theme #sidebar-header {
+    background-color: #4a5568;
 }
 
-.menu-item {
+/* Кнопка смены темы */
+.theme-button {
+    background: none;
+    border: none;
+    cursor: pointer;
     padding: 0.5rem;
+}
+
+.theme-button img {
+    width: 24px;
+    height: 24px;
+}
+
+body.dark-theme .theme-button img {
+    content: url('../icons/moon.svg'); /* Луна в темной теме */
+    filter: brightness(0) invert(1); /* Делает иконку белой в темной теме */
+}
+
+body:not(.dark-theme) .theme-button img {
+    content: url('../icons/sun.svg'); /* Солнце в светлой теме */
+}
+
+/* Стили для иконок в меню */
+.menu-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+body.dark-theme .menu-icon {
+    filter: brightness(0) invert(1); /* Делает иконки белыми в темной теме */
+}
+
+/* Стили для пунктов меню */
+#sidebar-content .menu-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 3rem;
     cursor: pointer;
     border-bottom: 1px solid #e2e8f0;
+    box-sizing: border-box;
 }
 
 .menu-item:hover {
@@ -283,6 +327,12 @@ body.dark-theme .menu-item {
 
 body.dark-theme .menu-item:hover {
     background-color: #4a5568;
+}
+
+/* Главный контейнер */
+#main-container {
+    z-index: 1000; /* Ниже sidebar */
+    position: relative;
 }
 
 

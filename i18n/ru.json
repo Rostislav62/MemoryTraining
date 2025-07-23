@@ -3,9 +3,8 @@
     "settings": "Настройки",
     "reset_settings": "Сбросить настройки",
     "export_import_settings": "Экспорт/Импорт настроек",
-    "language": "Язык",
-    "dark_theme": "Тёмная тема",
-    "light_theme": "Светлая тема",
+    "language": "English",
+
     "statistics": "Статистика",
     "instructions": "Инструкции",
     "about": "О программе",
