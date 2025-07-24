@@ -29,7 +29,7 @@ body.dark-theme #main-container {
 /* Верхняя полоса */
 #top-bar {
     width: 100%;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.75rem;
     background-color: #e0e0e0;
     display: flex;
     align-items: center;
@@ -43,6 +43,9 @@ body.dark-theme #top-bar {
 
 #menu-button {
     margin-right: 1rem;
+    padding: 0.5rem;
+    min-width: 44px;
+    min-height: 44px;
     background-color: #e0e0e0; /* Цвет как у top-bar в светлой теме */
     color: #000; /* Черные линии иконки в светлой теме */
 }
@@ -73,8 +76,7 @@ body.dark-theme #menu-button {
 }
 
 #mode-title {
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1rem;
 }
 
 /* Таймер */
@@ -91,7 +93,7 @@ body.dark-theme #menu-button {
     grid-template-columns: 1fr 1fr; /* Две колонки равной ширины */
     grid-template-rows: auto auto; /* Две строки */
     width: 100%; /* Во всю ширину бокса */
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     text-align: center;
 }
 
@@ -129,6 +131,7 @@ body.dark-theme #menu-button {
     object-fit: contain;
     max-height: 48vh;
     margin-bottom: 1rem;
+    margin-top: 0.5rem;
 }
 
 /* Контейнер для вариантов ответа */
@@ -438,6 +441,7 @@ body.dark-theme th, body.dark-theme td {
     }
     #mode-title {
         font-size: 1.25rem;
+        margin-top: 1.5625rem; /* ~25px при 1rem=16px */
     }
     .modal-content {
         width: 100%; /* Полная ширина на мобильных */
@@ -464,6 +468,7 @@ body.dark-theme th, body.dark-theme td {
     }
     #card-image {
         max-height: 36vh; /* Увеличено на 20% от 30vh */
+        margin-top: 0.5rem; /* Поднимаем изображение */
     }
     .button {
         padding: 0.5rem;
