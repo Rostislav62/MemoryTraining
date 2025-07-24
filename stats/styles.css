@@ -209,6 +209,42 @@ body.dark-theme .button:hover {
     background-color: #5ab885;
 }
 
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1002; /* Выше бокового меню */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    width: 80%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+/* На мобильных устройствах модальное окно занимает весь экран */
+@media (max-width: 640px) {
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        max-height: none;
+        border-radius: 0;
+        padding: 0.5rem;
+    }
+}
+
 /* Боковое меню */
 .sidebar {
     position: fixed;
@@ -219,24 +255,7 @@ body.dark-theme .button:hover {
     background-color: #fff;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
-    z-index: 999; /* Устанавливаем ниже main-container, чтобы меню уходило под него */
-}
-
-.sidebar.active {
-    transform: translateX(0);
-}
-
-/* Боковое меню */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 20%; /* Выдвигается с левого края main-container (20% отступ слева) */
-    width: 250px;
-    height: 100%;
-    background-color: #fff;
-    transform: translateX(-100%); /* Уходит за левый край main-container */
-    transition: transform 0.3s ease-in-out;
-    z-index: 1001; /* Выше main-container, как модальное окно */
+    z-index: 1001; /* Ниже modal */
 }
 
 body.dark-theme .sidebar {
@@ -252,7 +271,16 @@ body.dark-theme .sidebar {
     .sidebar {
         left: 0;
         width: 80%;
-        z-index: 1001; /* На мобильных выше, как модальное окно */
+        z-index: 1001;
+    }
+}
+
+/* На мобильных устройствах main-container занимает 100%, поэтому left: 0 */
+@media (max-width: 640px) {
+    .sidebar {
+        left: 0;
+        width: 80%;
+        z-index: 1001; /* Ниже модального окна */
     }
 }
 
@@ -367,7 +395,7 @@ body.dark-theme .menu-item:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 1002; /* Выше sidebar */
     justify-content: center;
     align-items: center;
 }
@@ -376,9 +404,11 @@ body.dark-theme .menu-item:hover {
     background-color: #fff;
     padding: 1rem;
     border-radius: 8px;
-    max-width: 90%;
-    max-height: 80vh;
+    width: 80%;
+    height: 100vh; /* Полная высота экрана */
+    max-width: 500px; /* Ограничиваем ширину на десктопе */
     overflow-y: auto;
+    box-sizing: border-box;
 }
 
 body.dark-theme .modal-content {
@@ -404,11 +434,14 @@ body.dark-theme .modal-content {
         font-size: 1rem;
     }
     .sidebar {
+        left: 0;
         width: 80%;
+        z-index: 1001;
     }
     .modal-content {
-        max-width: 95%;
+        width: 100%; /* Полная ширина на мобильных */
         padding: 0.5rem;
+        max-width: none; /* Убираем ограничение ширины */
     }
 }
 

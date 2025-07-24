@@ -260,6 +260,7 @@ function showModal(templateId) {
         if (template) {
             modalContent.appendChild(template.content.cloneNode(true));
             modal.style.display = 'flex';
+            document.querySelector('.sidebar.active')?.classList.remove('active'); // Закрываем боковое меню
             fetch(`../i18n/${currentLanguage}.json`)
                 .then(response => {
                     if (!response.ok) throw new Error(`Failed to load translations for modal: ../i18n/${currentLanguage}.json`);
