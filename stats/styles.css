@@ -75,13 +75,15 @@ body.dark-theme #menu-button {
     padding: 1rem; /* Внутренние отступы 16px */
     box-sizing: border-box; /* Включает padding в расчёт размеров */
     overflow: auto; /* Прокрутка при переполнении */
-    margin-top: 3.5rem; /* Отступ сверху 56px для top-bar */
+    margin-top: 0.5rem; /* Отступ сверху 16px для top-bar */
 }
 
 /* Стили для строки "Тренировка"/"Тестирование" */
 #mode-title {
     font-size: 1.5rem; /* Размер шрифта 24px */
     font-weight: bold; /* Жирное начертание */
+    margin-top: 0.1rem; /* Минимальный отступ сверху 1.6px для плотного прилегания к top-bar */
+}
 }
 
 /* Таймер */
@@ -397,6 +399,7 @@ body.dark-theme th, body.dark-theme td {
     }
     #mode-title {
         font-size: 1.25rem; /* Размер шрифта 20px для "Тренировка"/"Тестирование" */
+        margin-top: 0.1rem; /* Минимальный отступ сверху 1.6px для плотного прилегания */
     }
     .modal-content {
         width: 100%; /* Полная ширина на мобильных */
