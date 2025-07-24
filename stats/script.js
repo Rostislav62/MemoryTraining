@@ -258,13 +258,6 @@ function showModal(templateId) {
         modalContent.innerHTML = '';
         const template = document.getElementById(templateId);
         if (template) {
-            // Добавляем кнопку назад
-            const backButton = document.createElement('button');
-            backButton.className = 'modal-back-button';
-            backButton.innerHTML = '<img src="../icons/back.svg" alt="Back Icon">';
-            backButton.onclick = closeModal;
-            modalContent.appendChild(backButton);
-            // Добавляем содержимое модального окна
             modalContent.appendChild(template.content.cloneNode(true));
             modal.style.display = 'flex';
             document.querySelector('.sidebar.active')?.classList.remove('active'); // Закрываем боковое меню
@@ -282,7 +275,7 @@ function showModal(templateId) {
                 .catch(error => console.error('Error loading modal translations:', error));
         }
     }
-}}
+}
 
 function showSettingsModal() {
     showModal('settings-modal-template');
