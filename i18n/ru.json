@@ -1,5 +1,7 @@
 {
-    "app_title": "Тренировка памяти",
+    "app_title": "Супер память",
+    "digit_label": "Цифра",
+    "letter_word_label": "Буква/Слово",
     "settings": "Настройки",
     "reset_settings": "Сбросить настройки",
     "export_import_settings": "Экспорт/Импорт настроек",

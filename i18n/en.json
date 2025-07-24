@@ -1,5 +1,7 @@
 {
-    "app_title": "Memory Training",
+    "app_title": "Super Memory",
+    "digit_label": "Digit",
+    "letter_word_label": "Letter/Word",
     "settings": "Settings",
     "reset_settings": "Reset Settings",
     "export_import_settings": "Export/Import Settings",

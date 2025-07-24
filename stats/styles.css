@@ -19,6 +19,7 @@ body.dark-theme {
     display: flex;
     flex-direction: column;
     background-color: #fff;
+    position: relative; /* Для позиционирования button-container */
 }
 
 body.dark-theme #main-container {
@@ -63,7 +64,7 @@ body.dark-theme #menu-button {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start; /* Выравнивание сверху */
     align-items: center;
     padding: 1rem;
     box-sizing: border-box;
@@ -76,51 +77,57 @@ body.dark-theme #menu-button {
     font-weight: bold;
 }
 
-/* Адаптивность для мобильных устройств */
-@media (max-width: 640px) {
-    #main-container {
-        width: 100%;
-    }
-    #top-bar {
-        padding: 0.5rem 0.75rem;
-    }
-    #app-title {
-        font-size: 1.5rem;
-    }
-    #mode-title {
-        font-size: 1.25rem;
-    }
-}
-
 /* Таймер */
 #timer {
     font-size: 1.25rem;
     margin-bottom: 1rem;
 }
 
+
+
 /* Контейнер для цифры и текста */
-#card-header {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
+.card-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две колонки равной ширины */
+    grid-template-rows: auto auto; /* Две строки */
+    width: 100%; /* Во всю ширину бокса */
     margin-bottom: 1rem;
+    text-align: center;
+}
+
+.table-row {
+    display: contents; /* Для корректной работы grid */
+}
+
+.table-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.table-cell span[data-i18n="digit_label"],
+.table-cell span[data-i18n="letter_word_label"] {
+    font-size: 1.25rem; /* Мельче, чем #mode-title (1.5rem), но читаемо */
 }
 
 #card-digit {
-    font-size: 3rem;
+    font-size: 4rem; /* В 2 раза больше, чем #app-title (2rem) */
     font-weight: bold;
 }
 
 #card-text {
-    font-size: 2rem;
+    font-size: 4rem; /* В 2 раза больше, чем #app-title (2rem) */
 }
+
+
 
 /* Изображение карточки */
 #card-image {
     max-width: 100%;
     height: auto;
     object-fit: contain;
-    max-height: 40vh;
+    max-height: 48vh;
     margin-bottom: 1rem;
 }
 
@@ -181,12 +188,16 @@ body.dark-theme .option.selected {
 #button-container {
     display: flex;
     gap: 1rem;
+    position: absolute;
+    bottom: 40px; /* Фиксированное расстояние от нижнего края */
+    width: 100%;
+    justify-content: center;
 }
 
 .button {
     padding: 0.75rem;
-    min-width: 48px;
-    min-height: 48px;
+    min-width: 100px; /* В 2 раза шире */
+    min-height: 52px; /* Заданная высота */
     border: none;
     border-radius: 4px;
     background-color: #4caf50;
@@ -234,17 +245,6 @@ body.dark-theme .button:hover {
     box-sizing: border-box;
 }
 
-/* На мобильных устройствах модальное окно занимает весь экран */
-@media (max-width: 640px) {
-    .modal-content {
-        width: 100%;
-        height: 100%;
-        max-height: none;
-        border-radius: 0;
-        padding: 0.5rem;
-    }
-}
-
 /* Боковое меню */
 .sidebar {
     position: fixed;
@@ -266,23 +266,6 @@ body.dark-theme .sidebar {
     transform: translateX(0);
 }
 
-/* На мобильных устройствах main-container занимает 100%, поэтому left: 0 */
-@media (max-width: 640px) {
-    .sidebar {
-        left: 0;
-        width: 80%;
-        z-index: 1001;
-    }
-}
-
-/* На мобильных устройствах main-container занимает 100%, поэтому left: 0 */
-@media (max-width: 640px) {
-    .sidebar {
-        left: 0;
-        width: 80%;
-        z-index: 1001; /* Ниже модального окна */
-    }
-}
 
 /* Заголовочная полоса бокового меню */
 #sidebar-header {
@@ -416,34 +399,6 @@ body.dark-theme .modal-content {
     color: #e2e8f0;
 }
 
-/* Адаптивность для мобильных устройств */
-@media (max-width: 640px) {
-    #card-digit {
-        font-size: 2.5rem;
-    }
-    #card-text {
-        font-size: 1.25rem;
-    }
-    #card-image {
-        max-height: 30vh;
-    }
-    .button {
-        padding: 0.5rem;
-        min-width: 44px;
-        min-height: 44px;
-        font-size: 1rem;
-    }
-    .sidebar {
-        left: 0;
-        width: 80%;
-        z-index: 1001;
-    }
-    .modal-content {
-        width: 100%; /* Полная ширина на мобильных */
-        padding: 0.5rem;
-        max-width: none; /* Убираем ограничение ширины */
-    }
-}
 
 /* Стили для статистики */
 #stats-summary p {
@@ -467,4 +422,53 @@ th, td {
 
 body.dark-theme th, body.dark-theme td {
     border-color: #4a5568;
+}
+
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 640px) {
+    #main-container {
+        width: 100%;
+    }
+    #top-bar {
+        padding: 0.5rem 0.75rem;
+    }
+    #app-title {
+        font-size: 1.5rem;
+    }
+    #mode-title {
+        font-size: 1.25rem;
+    }
+    .modal-content {
+        width: 100%; /* Полная ширина на мобильных */
+        height: 100%; /* Полная высота на мобильных */
+        max-width: none; /* Убираем ограничение ширины */
+        max-height: none; /* Убираем ограничение высоты */
+        border-radius: 0; /* Убираем скругление углов */
+        padding: 0.5rem;
+    }
+    .sidebar {
+        left: 0;
+        width: 80%;
+        z-index: 1001; /* Ниже модального окна */
+    }
+    .table-cell span[data-i18n="digit_label"],
+    .table-cell span[data-i18n="letter_word_label"] {
+        font-size: 1rem; /* Чуть меньше для мобильных, но читаемо */
+    }
+    #card-digit {
+        font-size: 3rem; /* Чуть меньше для мобильных, но в 2 раза больше #app-title (1.5rem) */
+    }
+    #card-text {
+        font-size: 3rem; /* Чуть меньше для мобильных, но в 2 раза больше #app-title (1.5rem) */
+    }
+    #card-image {
+        max-height: 36vh; /* Увеличено на 20% от 30vh */
+    }
+    .button {
+        padding: 0.5rem;
+        min-width: 100px; /* В 2 раза шире */
+        min-height: 52px; /* Заданная высота */
+        font-size: 1rem;
+    }
 }

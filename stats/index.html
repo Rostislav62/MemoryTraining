@@ -20,10 +20,26 @@
         <div id="card-container">
             <h2 id="mode-title" class="text-center mb-4" data-i18n="mode_title"></h2>
             <div id="timer" class="mb-4"></div>
-            <div id="card-header" class="flex justify-center gap-4 mb-4">
-                <span id="card-digit" class="text-4xl"></span>
-                <span id="card-text" class="text-4xl"></span>
+
+            <div id="card-header" class="card-table mb-4">
+                <div class="table-row">
+                    <div class="table-cell">
+                        <span data-i18n="digit_label">Цифра</span>
+                    </div>
+                    <div class="table-cell">
+                        <span data-i18n="letter_word_label">Буква/Слово</span>
+                    </div>
+                </div>
+                <div class="table-row">
+                    <div class="table-cell">
+                        <span id="card-digit"></span>
+                    </div>
+                    <div class="table-cell">
+                        <span id="card-text"></span>
+                    </div>
+                </div>
             </div>
+
             <img id="card-image" src="" alt="Card image" class="mb-4">
             <div id="options-container" class="mb-4"></div>
             <div id="feedback" class="mb-4"></div>
