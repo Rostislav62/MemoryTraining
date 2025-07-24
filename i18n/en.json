@@ -1,7 +1,7 @@
 {
     "app_title": "Super Memory",
     "digit_label": "Digit",
-    "letter_word_label": "Letter/Word",
+    "letter_word_label": "Value",
     "settings": "Settings",
     "reset_settings": "Reset Settings",
     "export_import_settings": "Export/Import Settings",
