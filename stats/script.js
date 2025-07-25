@@ -455,6 +455,10 @@ function checkAnswer() {
     const correctLetter = isSingleDigit ? card.letter : null;
     const correctWord = card.word;
     const feedback = document.getElementById('feedback');
+    const cardText = document.getElementById('card-text');
+    const cardImage = document.getElementById('card-image');
+    const optionsContainer = document.getElementById('options-container');
+    const nextButton = document.getElementById('next-button');
     const startTime = Date.now();
     let isCorrect = false;
 
@@ -463,20 +467,10 @@ function checkAnswer() {
         .then(translations => {
             if (isSingleDigit) {
                 isCorrect = selectedLetter?.textContent === correctLetter && selectedWord?.textContent === correctWord;
-                if (feedback) {
-                    feedback.textContent = isCorrect
-                        ? translations.correct
-                        : `${translations.incorrect} ${translations.correct_answer}: ${correctLetter}, ${correctWord}`;
-                }
             } else {
                 isCorrect = selectedWord?.textContent === correctWord;
-                if (feedback) {
-                    feedback.textContent = isCorrect
-                        ? translations.correct
-                        : `${translations.incorrect} ${translations.correct_answer}: ${correctWord}`;
-                }
             }
-            if (feedback) feedback.style.color = isCorrect ? 'green' : 'red';
+
             stats.attempts.push({
                 digit: isSingleDigit ? card.digit : card.number,
                 isCorrect,
@@ -486,20 +480,41 @@ function checkAnswer() {
             });
             stats[isCorrect ? 'correct' : 'incorrect']++;
             streak = isCorrect ? streak + 1 : 0;
-            if (streak === 10 && feedback) {
-                feedback.textContent += ` ${translations.streak}`;
-                setTimeout(() => {
-                    if (feedback && feedback.textContent.includes(translations.streak)) {
-                        feedback.textContent = isCorrect ? translations.correct : `${translations.incorrect} ${translations.correct_answer}: ${correctWord}`;
-                    }
-                }, 2000);
+
+            if (feedback) feedback.textContent = ''; // Убираем статистику
+
+            if (!isCorrect) {
+                // Показываем правильный ответ как в режиме тренировки
+                if (cardText) cardText.textContent = isSingleDigit ? card.letter : card.word;
+                if (cardImage) {
+                    cardImage.src = `../images/${encodeURIComponent(card.image)}`;
+                    cardImage.style.display = 'block';
+                }
+                if (optionsContainer) optionsContainer.innerHTML = ''; // Убираем варианты ответа
+                if (nextButton) nextButton.style.display = 'block'; // Показываем кнопку "Далее"
+
+                // Настройка автоматического перехода по времени
+                const settings = JSON.parse(localStorage.getItem('settings')) || { answerTime: 5000 };
+                if (isAutoPlay) {
+                    autoPlayTimeout = setTimeout(nextCard, settings.answerTime);
+                }
+            } else {
+                // При правильном ответе сразу переходим к следующему вопросу
+                if (optionsContainer) optionsContainer.innerHTML = '';
+                if (isAutoPlay) {
+                    const settings = JSON.parse(localStorage.getItem('settings')) || { displayTime: 2000 };
+                    autoPlayTimeout = setTimeout(nextCard, settings.displayTime);
+                } else {
+                    nextCard();
+                }
             }
-            updateStatsDisplay();
-            const optionsContainer = document.getElementById('options-container');
-            if (optionsContainer) optionsContainer.innerHTML = '';
-            if (isAutoPlay && !isMemorizationMode) {
-                const settings = JSON.parse(localStorage.getItem('settings')) || { displayTime: 2000 };
-                autoPlayTimeout = setTimeout(nextCard, settings.displayTime);
+
+            if (streak === 10 && feedback) {
+                feedback.textContent = translations.streak;
+                feedback.style.color = 'green';
+                setTimeout(() => {
+                    if (feedback) feedback.textContent = '';
+                }, 2000);
             }
         });
 }
@@ -512,35 +527,37 @@ function startAnswerTimer() {
         answerTimeout = setTimeout(() => {
             const card = currentCards[currentCardIndex];
             const isSingleDigit = 'digit' in card;
-            const correctLetter = isSingleDigit ? card.letter : null;
-            const correctWord = card.word;
-            fetch(`../i18n/${currentLanguage}.json`)
-                .then(response => response.json())
-                .then(translations => {
-                    const feedback = document.getElementById('feedback');
-                    if (feedback) {
-                        feedback.textContent = isSingleDigit
-                            ? `${translations.timeout} ${translations.correct_answer}: ${correctLetter}, ${correctWord}`
-                            : `${translations.timeout} ${translations.correct_answer}: ${correctWord}`;
-                        feedback.style.color = 'red';
-                    }
-                    stats.timeout++;
-                    stats.attempts.push({
-                        digit: isSingleDigit ? card.digit : card.number,
-                        isCorrect: false,
-                        selectedLetter: null,
-                        selectedWord: null,
-                        time: settings.answerTime
-                    });
-                    streak = 0;
-                    updateStatsDisplay();
-                    const optionsContainer = document.getElementById('options-container');
-                    if (optionsContainer) optionsContainer.innerHTML = '';
-                    if (isAutoPlay) {
-                        const delay = settings.displayTime || 2000;
-                        autoPlayTimeout = setTimeout(nextCard, delay);
-                    }
-                });
+            const feedback = document.getElementById('feedback');
+            const cardText = document.getElementById('card-text');
+            const cardImage = document.getElementById('card-image');
+            const optionsContainer = document.getElementById('options-container');
+            const nextButton = document.getElementById('next-button');
+
+            stats.timeout++;
+            stats.attempts.push({
+                digit: isSingleDigit ? card.digit : card.number,
+                isCorrect: false,
+                selectedLetter: null,
+                selectedWord: null,
+                time: settings.answerTime
+            });
+            streak = 0;
+
+            if (feedback) feedback.textContent = ''; // Убираем статистику
+
+            // Показываем правильный ответ как в режиме тренировки
+            if (cardText) cardText.textContent = isSingleDigit ? card.letter : card.word;
+            if (cardImage) {
+                cardImage.src = `../images/${encodeURIComponent(card.image)}`;
+                cardImage.style.display = 'block';
+            }
+            if (optionsContainer) optionsContainer.innerHTML = ''; // Убираем варианты ответа
+            if (nextButton) nextButton.style.display = 'block'; // Показываем кнопку "Далее"
+
+            // Настройка автоматического перехода по времени
+            if (isAutoPlay) {
+                autoPlayTimeout = setTimeout(nextCard, settings.answerTime);
+            }
         }, settings.answerTime);
     }
 }
@@ -629,18 +646,6 @@ function stopAutoPlay() {
 }
 
 function updateStatsDisplay() {
-    const total = stats.correct + stats.incorrect + stats.timeout;
-    const accuracy = total > 0 ? ((stats.correct / total) * 100).toFixed(1) : 0;
-    fetch(`../i18n/${currentLanguage}.json`)
-        .then(response => response.json())
-        .then(translations => {
-            const feedback = document.getElementById('feedback');
-            if (feedback) {
-                feedback.textContent = total > 0
-                    ? `${translations.correct}: ${stats.correct}, ${translations.incorrect}: ${stats.incorrect}, ${translations.timeout}: ${stats.timeout}, ${translations.accuracy}: ${accuracy}%`
-                    : '';
-            }
-        });
 }
 
 function showStats() {
