@@ -714,3 +714,9 @@ body.dark-theme th, body.dark-theme td {
         font-size: 1rem; /* Размер шрифта 16px */
     }
 }
+
+    /* Бокс для перекрытия бокового меню на мобильных */
+    #sidebar-cover {
+        width: 0; /* Нулевая ширина */
+        height: 0; /* Нулевая высота */
+    }
