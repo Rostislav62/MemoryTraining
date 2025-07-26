@@ -264,6 +264,14 @@ body.dark-theme .button:hover {
     background-color: #5ab885; /* Более тёмный зелёный */
 }
 
+/* Стили для SVG-иконок в кнопках */
+.button-icon {
+    width: 24px; /* Ширина иконки, соответствует SVG */
+    height: 24px; /* Высота иконки, соответствует SVG */
+    vertical-align: middle; /* Выравнивание по центру */
+    display: inline-block; /* Для корректного отображения в кнопке */
+}
+
 
 /* Контейнер для кнопок внизу модального окна */
 .settings-buttons-container {
@@ -712,6 +720,12 @@ body.dark-theme th, body.dark-theme td {
         min-width: 100px; /* Минимальная ширина 100px */
         min-height: 52px; /* Минимальная высота 52px */
         font-size: 1rem; /* Размер шрифта 16px */
+    }
+
+    /* Иконки на Кнопки на мобильных */
+    .button-icon {
+        width: 20px; /* Уменьшенный размер для мобильных */
+        height: 20px;
     }
 }
 
