@@ -290,6 +290,13 @@ function showModal(templateId) {
         const template = document.getElementById(templateId); // Находим шаблон
         if (template) {
             modalContent.appendChild(template.content.cloneNode(true)); // Клонируем шаблон
+            // Добавляем кнопку-крестик
+            const closeButton = document.createElement('button');
+            closeButton.id = 'close-modal-button';
+            closeButton.className = 'close-button';
+            closeButton.textContent = 'X'; // Используем текст "X" вместо эмодзи
+            closeButton.onclick = closeModal;
+            modalContent.appendChild(closeButton);
             modal.style.display = 'flex'; // Показываем модальное окно
             document.querySelector('.sidebar.active')?.classList.remove('active'); // Закрываем боковое меню
             fetch(`../i18n/${currentLanguage}.json`) // Загружаем переводы
@@ -714,7 +721,7 @@ function showStats() {
         .then(translations => {
             const summary = document.getElementById('stats-summary'); // Элемент для сводки
             if (summary) {
-                summary.innerHTML = ` // Формируем HTML для сводки
+                summary.innerHTML = `
                     <p>${translations.correct}: ${stats.correct}</p>
                     <p>${translations.incorrect}: ${stats.incorrect}</p>
                     <p>${translations.timeout}: ${stats.timeout}</p>
@@ -722,7 +729,7 @@ function showStats() {
                     <p>${translations.average_time}: ${calculateAverageTime().toFixed(1)} ${translations.ms}</p>
                     <h4>${translations.errors}:</h4>
                     <ul>${generateErrorList()}</ul>
-                `;
+                `; // Формируем HTML для сводки
             }
             const ctx = document.getElementById('stats-chart'); // Элемент для графика
             if (ctx) {

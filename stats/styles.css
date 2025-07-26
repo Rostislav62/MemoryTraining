@@ -347,13 +347,14 @@ body.dark-theme .settings-button:hover {
     border-radius: 0.5rem; /* Скругление углов 8px */
     padding: 1rem; /* Отступы 16px */
     width: 80%; /* Ширина 80% на десктопе */
-    max-width: 500px; /* Максимальная ширина 500px */
+    max-width: 700px; /* Максимальная ширина 500px */
     max-height: 90vh; /* Максимальная высота 90% экрана */
     overflow-y: auto; /* Прокрутка по вертикали */
     box-sizing: border-box; /* Включает padding в размеры */
     display: flex; /* Flexbox для содержимого */
     flex-direction: column; /* Вертикальное расположение */
     min-height: 80vh; /* Минимальная высота 80% экрана */
+    position: relative; /* Для позиционирования крестика */
 }
 
 /* Тёмная тема для модального контента */
@@ -651,6 +652,43 @@ th, td {
 body.dark-theme th, body.dark-theme td {
     border-color: #4a5568; /* Тёмная рамка */
 }
+
+
+
+/* Стили для кнопки закрытия модального окна */
+.close-button {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10px; /* Отступ сверху 10px */
+    right: 10px; /* Отступ справа 10px */
+    background: none; /* Без фона */
+    border: none; /* Без рамки */
+    font-size: 1.25rem; /* Размер шрифта 20px */
+    color: #000; /* Чёрный цвет крестика */
+    cursor: pointer; /* Курсор указателя */
+    padding: 0.25rem; /* Отступы 4px */
+    transition: color 0.2s; /* Плавный переход цвета */
+    z-index: 1010; /* Высокий индекс чтобы не перекрывали */
+}
+
+/* Наведение на кнопку закрытия */
+.close-button:hover {
+    color: #ff0000; /* Красный цвет при наведении */
+}
+
+/* Тёмная тема для кнопки закрытия */
+body.dark-theme .close-button {
+    color: #fff; /* Белый цвет крестика */
+}
+
+/* Наведение в тёмной теме */
+body.dark-theme .close-button:hover {
+    color: #ff5555; /* Светло-красный при наведении */
+}
+
+
+
+
+
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 640px) {

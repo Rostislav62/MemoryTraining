@@ -173,29 +173,31 @@
         </div>
     </template>
     <template id="stats-modal-template">
-        <div class="p-4">
-            <h2 data-i18n="statistics">Statistics</h2>
-            <h3 data-i18n="current_session">Current Session</h3>
-            <div id="stats-summary"></div>
-            <canvas id="stats-chart" class="mb-4"></canvas>
-            <h3 data-i18n="history">History</h3>
-            <table class="w-full mb-4">
-                <thead>
-                    <tr>
-                        <th data-i18n="date">Date</th>
-                        <th data-i18n="correct">Correct</th>
-                        <th data-i18n="incorrect">Incorrect</th>
-                        <th data-i18n="timeout">Timeout</th>
-                        <th data-i18n="accuracy">Accuracy</th>
-                    </tr>
-                </thead>
-                <tbody id="history-table-body"></tbody>
-            </table>
-            <canvas id="history-chart" class="mb-4"></canvas>
-            <button onclick="exportStats()" data-i18n="export_csv" class="button mb-2">Export to CSV</button>
-            <button onclick="resetStats()" data-i18n="reset_stats" class="button">Reset Statistics</button>
-        </div>
-    </template>
+            <div class="p-4">
+                <h2 data-i18n="statistics">Statistics</h2>
+                <h3 data-i18n="current_session">Current Session</h3>
+                <div id="stats-summary"></div>
+                <canvas id="stats-chart" class="mb-4"></canvas>
+                <h3 data-i18n="history">History</h3>
+                <table class="w-full mb-4">
+                    <thead>
+                        <tr>
+                            <th data-i18n="date">Date</th>
+                            <th data-i18n="correct">Correct</th>
+                            <th data-i18n="incorrect">Incorrect</th>
+                            <th data-i18n="timeout">Timeout</th>
+                            <th data-i18n="accuracy">Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body"></tbody>
+                </table>
+                <canvas id="history-chart" class="mb-4"></canvas>
+                <div class="settings-buttons-container">
+                    <button onclick="exportStats()" data-i18n="export_csv" class="button">Export to CSV</button>
+                    <button onclick="resetStats()" data-i18n="reset_stats" class="button">Reset Statistics</button>
+                </div>
+            </div>
+        </template>
 
     <script src="script.js"></script>
 </body>
