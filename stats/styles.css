@@ -692,6 +692,11 @@ body.dark-theme th, body.dark-theme td {
         z-index: 1001; /* Ниже модального окна */
     }
 
+    /* Скрыть бокс перекрытия на мобильных */
+    #sidebar-cover {
+        display: none; /* Скрываем бокс на мобильных устройствах */
+    }
+
     /* Метки в таблице на мобильных */
     .table-cell span[data-i18n="digit_label"],
     .table-cell span[data-i18n="letter_word_label"] {
