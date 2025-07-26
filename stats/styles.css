@@ -1,4 +1,4 @@
-/* Базовые стили для всего приложения */
+/* Базовые стили для страницы */
 body {
     margin: 0; /* Убирает внешние отступы страницы */
     font-family: Arial, sans-serif; /* Задаёт шрифт Arial или системный sans-serif */
@@ -6,6 +6,7 @@ body {
     transition: background-color 0.3s; /* Плавный переход цвета фона при смене темы */
 }
 
+/* Тёмная тема для страницы */
 body.dark-theme {
     background-color: #1a202c; /* Тёмный фон для тёмной темы */
     color: #e2e8f0; /* Светлый цвет текста для тёмной темы */
@@ -16,74 +17,92 @@ body.dark-theme {
     width: 60%; /* Ширина 60% на десктопе */
     height: 100vh; /* Полная высота экрана */
     margin: 0 auto; /* Центрирование по горизонтали */
-    display: flex; /* Использует flexbox для расположения дочерних элементов */
-    flex-direction: column; /* Вертикальное расположение дочерних элементов */
+    display: flex; /* Flexbox для расположения дочерних элементов */
+    flex-direction: column; /* Вертикальное расположение */
     background-color: #fff; /* Белый фон для светлой темы */
-    position: relative; /* Для позиционирования button-container и z-index */
-    z-index: 1000; /* Ниже бокового меню, чтобы sidebar перекрывал */
+    position: relative; /* Для позиционирования button-container */
+    z-index: 1000; /* Ниже бокового меню */
 }
 
+/* Тёмная тема для главного контейнера */
 body.dark-theme #main-container {
-    background-color: #2d3748; /* Тёмный фон контейнера для тёмной темы */
+    background-color: #2d3748; /* Тёмный фон для тёмной темы */
+}
+
+/* Бокс для перекрытия бокового меню */
+#sidebar-cover {
+    position: fixed; /* Фиксированное положение */
+    top: 0; /* Прижато к верхнему краю */
+    left: 0; /* Прижато к левому краю */
+    width: 20%; /* Ширина соответствует пустому пространству слева */
+    height: 100vh; /* Полная высота экрана */
+    background-color: #f0f0f0; /* Цвет как у body в светлой теме */
+    z-index: 1003; /* Ниже sidebar, выше фона */
+}
+
+/* Тёмная тема для бокса перекрытия */
+body.dark-theme #sidebar-cover {
+    background-color: #1a202c; /* Цвет как у body в тёмной теме */
 }
 
 /* Верхняя полоса */
 #top-bar {
     width: 100%; /* Полная ширина контейнера */
-    padding: 0.5rem 0.75rem; /* Внутренние отступы: 8px сверху/снизу, 12px слева/справа */
+    padding: 0.5rem 0.75rem; /* Отступы: 8px сверху/снизу, 12px слева/справа */
     background-color: #e0e0e0; /* Светло-серый фон для светлой темы */
     display: flex; /* Flexbox для расположения элементов */
-    align-items: center; /* Вертикальное центрирование элементов */
-    justify-content: flex-start; /* Выравнивание элементов слева */
-    box-sizing: border-box; /* Включает padding в расчёт ширины */
+    align-items: center; /* Вертикальное центрирование */
+    justify-content: flex-start; /* Выравнивание слева */
+    box-sizing: border-box; /* Включает padding в ширину */
 }
 
+/* Тёмная тема для верхней полосы */
 body.dark-theme #top-bar {
-    background-color: #4a5568; /* Тёмный фон полосы для тёмной темы */
+    background-color: #4a5568; /* Тёмный фон для тёмной темы */
 }
 
 /* Кнопка меню */
 #menu-button {
     margin-right: 1rem; /* Отступ справа 16px */
-    padding: 0.5rem; /* Внутренние отступы 8px */
-    min-width: 44px; /* Минимальная ширина кнопки */
-    min-height: 44px; /* Минимальная высота кнопки */
+    padding: 0.5rem; /* Отступы 8px */
+    min-width: 44px; /* Минимальная ширина */
+    min-height: 44px; /* Минимальная высота */
     background-color: #e0e0e0; /* Фон как у top-bar в светлой теме */
-    color: #000; /* Чёрный цвет иконки в светлой теме */
+    color: #000; /* Чёрный цвет иконки */
 }
 
+/* Тёмная тема для кнопки меню */
 body.dark-theme #menu-button {
     background-color: #4a5568; /* Фон как у top-bar в тёмной теме */
-    color: #fff; /* Белый цвет иконки в тёмной теме */
+    color: #fff; /* Белый цвет иконки */
 }
 
 /* Заголовок приложения */
 #app-title {
     font-size: 2rem; /* Размер шрифта 32px */
     font-weight: bold; /* Жирное начертание */
-    flex-grow: 1; /* Занимает всё доступное пространство */
+    flex-grow: 1; /* Занимает доступное пространство */
     text-align: center; /* Центрирование текста */
 }
 
 /* Панель с карточками */
 #card-container {
-    flex-grow: 1; /* Занимает всё доступное пространство по высоте */
-    display: flex; /* Flexbox для расположения элементов */
+    flex-grow: 1; /* Занимает доступное пространство по высоте */
+    display: flex; /* Flexbox для расположения */
     flex-direction: column; /* Вертикальное расположение */
-    justify-content: flex-start; /* Выравнивание содержимого сверху */
+    justify-content: flex-start; /* Выравнивание сверху */
     align-items: center; /* Центрирование по горизонтали */
-    padding: 1rem; /* Внутренние отступы 16px */
-    box-sizing: border-box; /* Включает padding в расчёт размеров */
+    padding: 1rem; /* Отступы 16px */
+    box-sizing: border-box; /* Включает padding в размеры */
     overflow: auto; /* Прокрутка при переполнении */
-    margin-top: 0.5rem; /* Отступ сверху 16px для top-bar */
+    margin-top: 0.5rem; /* Отступ сверху 8px */
 }
 
-/* Стили для строки "Тренировка"/"Тестирование" */
+/* Заголовок режима (Тренировка/Тестирование) */
 #mode-title {
     font-size: 1.5rem; /* Размер шрифта 24px */
     font-weight: bold; /* Жирное начертание */
-    margin-top: 0.1rem; /* Минимальный отступ сверху 1.6px для плотного прилегания к top-bar */
-}
+    margin-top: 0.1rem; /* Отступ сверху 1.6px */
 }
 
 /* Таймер */
@@ -92,97 +111,107 @@ body.dark-theme #menu-button {
     margin-bottom: 1rem; /* Отступ снизу 16px */
 }
 
-/* Таблица для цифры и текста */
+/* Таблица для карточки */
 .card-table {
-    display: grid; /* Использует grid для табличного отображения */
+    display: grid; /* Grid для табличного отображения */
     grid-template-columns: 1fr 1fr; /* Две колонки равной ширины */
     grid-template-rows: auto auto; /* Две строки */
-    width: 100%; /* Полная ширина контейнера */
+    width: 100%; /* Полная ширина */
     margin-bottom: 0.5rem; /* Отступ снизу 8px */
     text-align: center; /* Центрирование текста */
 }
 
+/* Строка таблицы */
 .table-row {
-    display: contents; /* Убирает контейнер строки для корректной работы grid */
+    display: contents; /* Убирает контейнер строки для grid */
 }
 
+/* Ячейка таблицы */
 .table-cell {
-    display: flex; /* Flexbox для центрирования содержимого */
+    display: flex; /* Flexbox для центрирования */
     justify-content: center; /* Горизонтальное центрирование */
     align-items: center; /* Вертикальное центрирование */
-    padding: 0.5rem; /* Внутренние отступы 8px */
+    padding: 0.5rem; /* Отступы 8px */
 }
 
+/* Метки в ячейках таблицы */
 .table-cell span[data-i18n="digit_label"],
 .table-cell span[data-i18n="letter_word_label"] {
-    font-size: 1.25rem; /* Размер шрифта меток 20px, меньше чем #mode-title */
+    font-size: 1.25rem; /* Размер шрифта 20px */
 }
 
-/* Цифра в таблице */
+/* Цифра в карточке */
 #card-digit {
-    font-size: 4rem; /* Размер шрифта 64px, в 2 раза больше #app-title */
+    font-size: 4rem; /* Размер шрифта 64px */
     font-weight: bold; /* Жирное начертание */
 }
 
-/* Буква или слово в таблице */
+/* Текст в карточке */
 #card-text {
-    font-size: 4rem; /* Размер шрифта 64px, в 2 раза больше #app-title */
+    font-size: 4rem; /* Размер шрифта 64px */
 }
 
 /* Изображение карточки */
 #card-image {
-    max-width: 100%; /* Максимальная ширина изображения */
-    height: auto; /* Автоматическая высота для сохранения пропорций */
-    object-fit: contain; /* Сохранение пропорций изображения */
-    max-height: 48vh; /* Максимальная высота 48% от высоты экрана */
+    max-width: 100%; /* Максимальная ширина */
+    height: auto; /* Автоматическая высота */
+    object-fit: contain; /* Сохранение пропорций */
+    max-height: 48vh; /* Максимальная высота 48% экрана */
     margin-bottom: 1rem; /* Отступ снизу 16px */
     margin-top: 0.5rem; /* Отступ сверху 8px */
 }
 
 /* Контейнер для вариантов ответа */
 #options-container {
-    display: flex; /* Flexbox для расположения вариантов */
+    display: flex; /* Flexbox для расположения */
     flex-direction: column; /* Вертикальное расположение */
     gap: 1rem; /* Отступ между элементами 16px */
     margin-bottom: 1rem; /* Отступ снизу 16px */
 }
 
+/* Строка вариантов ответа */
 .options-row {
-    display: flex; /* Flexbox для строки вариантов */
+    display: flex; /* Flexbox для строки */
     gap: 0.5rem; /* Отступ между вариантами 8px */
-    flex-wrap: wrap; /* Перенос на новую строку при нехватке места */
-    justify-content: center; /* Центрирование вариантов */
+    flex-wrap: wrap; /* Перенос на новую строку */
+    justify-content: center; /* Центрирование */
 }
 
+/* Вариант ответа */
 .option {
     padding: 0.5rem 1rem; /* Отступы: 8px сверху/снизу, 16px слева/справа */
     border: 1px solid #ccc; /* Серая рамка */
-    border-radius: 4px; /* Скругление углов 4px */
-    cursor: pointer; /* Курсор указателя при наведении */
+    border-radius: 4px; /* Скругление углов */
+    cursor: pointer; /* Курсор указателя */
     background-color: #fff; /* Белый фон */
-    transition: background-color 0.2s; /* Плавный переход фона */
+    transition: background-color: 0.2s; /* Плавный переход фона */
 }
 
+/* Наведение на вариант ответа */
 .option:hover {
-    background-color: #e0e0e0; /* Светло-серый фон при наведении */
+    background-color: #e0e0e0; /* Светло-серый фон */
 }
 
+/* Выбранный вариант ответа */
 .option.selected {
-    background-color: #4caf50; /* Зелёный фон для выбранного варианта */
+    background-color: #4caf50; /* Зелёный фон */
     color: #fff; /* Белый текст */
 }
 
+/* Тёмная тема для варианта ответа */
 body.dark-theme .option {
-    background-color: #2d3748; /* Тёмный фон в тёмной теме */
-    border-color: #4a5568; /* Тёмная рамка в тёмной теме */
+    background-color: #2d3748; /* Тёмный фон */
+    border-color: #4a5568; /* Тёмная рамка */
 }
 
+/* Наведение на вариант ответа в тёмной теме */
 body.dark-theme .option:hover {
-    background-color: #4a5568; /* Более светлый тёмный фон при наведении */
+    background-color: #4a5568; /* Более светлый тёмный фон */
 }
 
+/* Выбранный вариант в тёмной теме */
 body.dark-theme .option.selected {
-    background-color: #68d391; /* Светло-зелёный фон для выбранного */
+    background-color: #68dcef; /* Светло-зелёный фон */
     color: #1a202c; /* Тёмный текст */
 }
 
@@ -192,22 +221,26 @@ body.dark-theme .option.selected {
     margin-bottom: 1rem; /* Отступ снизу 16px */
 }
 
-/* Кнопки управления */
+/* Контейнер для кнопок управления */
 #button-container {
-    display: flex; /* Flexbox для расположения кнопок */
+    display: flex; /* Flexbox для кнопок */
     gap: 1rem; /* Отступ между кнопками 16px */
     position: absolute; /* Абсолютное позиционирование */
-    bottom: 40px; /* Расстояние от нижнего края 40px */
+    bottom: 80px; /* Отступ снизу 80px */
     width: 100%; /* Полная ширина */
     justify-content: center; /* Центрирование кнопок */
 }
 
+/* Кнопки управления (вне модального окна) */
 .button {
+    display: flex; /* Flexbox для центровки содержимого */
+    justify-content: center; /* Горизонтальное центрирование */
+    align-items: center; /* Вертикальное центрирование */
     padding: 0.75rem; /* Отступы 12px */
     min-width: 100px; /* Минимальная ширина 100px */
-    min-height: 52px; /* Минимальная высота 52px */
+    min-height: 44px; /* Минимальная высота 44px */
     border: none; /* Без рамки */
-    border-radius: 4px; /* Скругление углов 4px */
+    border-radius: 5px; /* Скругление углов 5px */
     background-color: #4caf50; /* Зелёный фон */
     color: #fff; /* Белый текст */
     cursor: pointer; /* Курсор указателя */
@@ -215,17 +248,75 @@ body.dark-theme .option.selected {
     transition: background-color 0.2s; /* Плавный переход фона */
 }
 
+/* Наведение на кнопку управления */
 .button:hover {
-    background-color: #45a049; /* Тёмно-зелёный фон при наведении */
+    background-color: #45a049; /* Тёмно-зелёный фон */
 }
 
+/* Тёмная тема для кнопок управления */
 body.dark-theme .button {
-    background-color: #68d391; /* Светло-зелёный фон в тёмной теме */
+    background-color: #68d391; /* Светло-зелёный фон */
     color: #1a202c; /* Тёмный текст */
 }
 
+/* Наведение на кнопку в тёмной теме */
 body.dark-theme .button:hover {
+    background-color: #5ab885; /* Более тёмный зелёный */
+}
+
+
+/* Контейнер для кнопок внизу модального окна */
+.settings-buttons-container {
+    display: flex; /* Flexbox для горизонтального расположения кнопок */
+    justify-content: center; /* Центрирование кнопок по горизонтали */
+    gap: 1rem; /* Отступ 16px между кнопками */
+    margin-top: auto; /* Прижимает контейнер к нижней части модального окна */
+    margin-bottom: 1rem; /* Отступ снизу 16px для визуального пространства */
+}
+
+/* Кнопки настроек */
+.settings-button {
+    display: flex; /* Flexbox для центрирования иконки */
+    justify-content: center; /* Горизонтальное центрирование содержимого */
+    align-items: center; /* Вертикальное центрирование содержимого */
+    padding: 0.5rem; /* Отступы 8px */
+    min-width: 52px; /* Минимальная ширина 52px */
+    min-height: 52px; /* Минимальная высота 52px */
+    border: none; /* Без рамки */
+    border-radius: 5px; /* Скругление углов 5px */
+    background-color: #4caf50; /* Зелёный фон в светлой теме */
+    color: #fff; /* Белый цвет иконки */
+    cursor: pointer; /* Курсор указателя */
+    transition: background-color 0.2s; /* Плавный переход фона */
+}
+
+/* Наведение на кнопку настроек */
+.settings-button:hover {
+    background-color: #45a049; /* Тёмно-зелёный фон при наведении */
+}
+
+/* SVG-иконки в кнопках настроек */
+.settings-button svg {
+    width: 24px; /* Ширина иконки 24px */
+    height: 24px; /* Высота иконки 24px */
+}
+
+/* Тёмная тема для кнопок настроек */
+body.dark-theme .settings-button {
+    background-color: #68d391; /* Светло-зелёный фон в тёмной теме */
+    color: #1a202c; /* Тёмный цвет иконки */
+}
+
+/* Наведение на кнопку в тёмной теме */
+body.dark-theme .settings-button:hover {
     background-color: #5ab885; /* Более тёмный зелёный при наведении */
+}
+
+
+
+/* Скрытый input для импорта */
+.hidden {
+    display: none; /* Скрывает элемент */
 }
 
 /* Модальное окно */
@@ -236,62 +327,216 @@ body.dark-theme .button:hover {
     left: 0; /* Прижато к левому краю */
     width: 100%; /* Полная ширина */
     height: 100%; /* Полная высота */
-    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный чёрный фон */
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
     z-index: 1002; /* Выше бокового меню */
-    justify-content: center; /* Центрирование содержимого по горизонтали */
-    align-items: center; /* Центрирование содержимого по вертикали */
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали */
 }
 
+/* Контент модального окна */
 .modal-content {
     background-color: #fff; /* Белый фон для светлой темы */
     border-radius: 0.5rem; /* Скругление углов 8px */
-    padding: 1rem; /* Внутренние отступы 16px */
+    padding: 1rem; /* Отступы 16px */
     width: 80%; /* Ширина 80% на десктопе */
     max-width: 500px; /* Максимальная ширина 500px */
     max-height: 90vh; /* Максимальная высота 90% экрана */
     overflow-y: auto; /* Прокрутка по вертикали */
     box-sizing: border-box; /* Включает padding в размеры */
+    display: flex; /* Flexbox для содержимого */
+    flex-direction: column; /* Вертикальное расположение */
+    min-height: 80vh; /* Минимальная высота 80% экрана */
 }
 
+/* Тёмная тема для модального контента */
 body.dark-theme .modal-content {
-    background-color: #2d3748; /* Тёмный фон в тёмной теме */
-    color: #e2e8f0; /* Светлый текст в тёмной теме */
+    background-color: #2d3748; /* Тёмный фон */
+    color: #e2e8f0; /* Светлый текст */
+}
+
+/* Горизонтальная линия в модальном окне */
+.modal-content hr {
+    border: none; /* Убирает стандартную рамку */
+    border-top: 1px solid #e2e8f0; /* Серая линия в светлой теме */
+    width: 100%; /* Полная ширина */
+    margin: 1rem 0; /* Отступы сверху и снизу 16px */
+}
+
+/* Тёмная тема для горизонтальной линии */
+body.dark-theme .modal-content hr {
+    border-top: 1px solid #4a5568; /* Тёмная линия */
+}
+
+/* Заголовок модального окна */
+.modal-content h2 {
+    text-align: center; /* Центрирование текста */
+    font-size: 1.5rem; /* Размер шрифта 24px */
+    font-weight: bold; /* Жирное начертание */
+    margin-bottom: 0.5rem; /* Отступ снизу 8px */
+}
+
+/* Подзаголовки модального окна */
+.modal-content h3 {
+    text-align: center; /* Центрирование текста */
+    font-size: 1.125rem; /* Размер шрифта 18px */
+    font-weight: 600; /* Полужирное начертание */
+    margin-bottom: 0.5rem; /* Отступ снизу 8px */
+}
+
+/* Контейнер для диапазона */
+.range-container {
+    display: flex; /* Flexbox для расположения */
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали */
+    gap: 1rem; /* Отступ 16px между элементами */
+    margin-bottom: 0.5rem; /* Отступ снизу 8px */
+}
+
+/* Метки в контейнере диапазона */
+.range-container label {
+    margin-right: 0.5rem; /* Отступ справа 8px */
+}
+
+/* Метка "To" в контейнере диапазона */
+.range-container label[data-i18n="range_to"] {
+    margin-left: 1rem; /* Отступ слева 16px */
+    margin-right: 0.5rem; /* Отступ справа 8px */
+}
+
+/* Поля ввода в контейнере диапазона */
+.range-container input[type="number"] {
+    width: 80px; /* Фиксированная ширина 80px */
+    padding: 0.25rem; /* Отступы 4px */
+    border: 1px solid #ccc; /* Серая рамка */
+    text-align: center; /* Центрирование текста */
+    border-radius: 4px; /* Скругление углов */
+}
+
+/* Тёмная тема для полей ввода диапазона */
+body.dark-theme .range-container input[type="number"] {
+    border-color: #4a5568; /* Тёмная рамка */
+    background-color: #2d3748; /* Тёмный фон */
+    color: #e2e8f0; /* Светлый текст */
+}
+
+/* Контейнер для порядка следования */
+.order-container {
+    display: flex; /* Flexbox для расположения */
+    justify-content: center; /* Центрирование по горизонтали */
+    align-items: center; /* Центрирование по вертикали */
+    gap: 1rem; /* Отступ 16px между радиокнопками */
+    margin-bottom: 0.5rem; /* Отступ снизу 8px */
+}
+
+/* Метки в контейнере порядка */
+.order-container label {
+    display: flex; /* Flexbox для метки */
+    align-items: center; /* Центрирование по вертикали */
+    cursor: pointer; /* Курсор указателя */
+}
+
+/* Радиокнопки в контейнере порядка */
+.order-container input[type="radio"] {
+    margin-right: 0.25rem; /* Отступ справа 4px */
+    width: 16px; /* Размер радиокнопки */
+    height: 16px; /* Размер радиокнопки */
+}
+
+/* Текст радиокнопок */
+.order-container span {
+    font-size: 1rem; /* Размер шрифта 16px */
+}
+
+/* Тёмная тема для радиокнопок */
+body.dark-theme .order-container input[type="radio"] {
+    background-color: #2d3748; /* Тёмный фон */
+    border-color: #4a5568; /* Тёмная рамка */
+}
+
+/* Тёмная тема для текста радиокнопок */
+body.dark-theme .order-container span {
+    color: #e2e8f0; /* Светлый текст */
+}
+
+/* Контейнер для тайминга */
+.timing-container {
+    display: flex; /* Flexbox для расположения */
+    flex-direction: column; /* Вертикальное расположение */
+    align-items: center; /* Центрирование по горизонтали */
+    margin-bottom: 0.5rem; /* Отступ снизу 8px */
+}
+
+/* Строки тайминга */
+.timing-container .timing-select {
+    display: flex; /* Flexbox для строки */
+    align-items: center; /* Центрирование по вертикали */
+    margin-bottom: 0.5rem; /* Отступ снизу 8px */
+}
+
+/* Метки в контейнере тайминга */
+.timing-container label {
+    margin-right: 0.5rem; /* Отступ справа 8px */
+    font-size: 1rem; /* Размер шрифта 16px */
+}
+
+/* Выпадающие списки в контейнере тайминга */
+.timing-container select {
+    width: 80px; /* Фиксированная ширина 80px */
+    padding: 0.25rem; /* Отступы 4px */
+    border: 1px solid #ccc; /* Серая рамка */
+    text-align: center; /* Центрирование текста */
+    border-radius: 4px; /* Скругление углов */
+}
+
+/* Тёмная тема для выпадающих списков тайминга */
+body.dark-theme .timing-container select {
+    border-color: #4a5568; /* Тёмная рамка */
+    background-color: #2d3748; /* Тёмный фон */
+    color: #e2e8f0; /* Светлый текст */
+}
+
+/* Тёмная тема для меток тайминга */
+body.dark-theme .timing-container label {
+    color: #e2e8f0; /* Светлый текст */
 }
 
 /* Боковое меню */
 .sidebar {
     position: fixed; /* Фиксированное положение */
     top: 0; /* Прижато к верхнему краю */
-    left: 20%; /* Отступ слева 20% для десктопа */
+    left: 20%; /* Отступ слева 20% */
     width: 250px; /* Фиксированная ширина 250px */
     height: 100%; /* Полная высота */
     background-color: #fff; /* Белый фон для светлой темы */
     transform: translateX(-100%); /* Скрыто за левым краем */
     transition: transform 0.3s ease-in-out; /* Плавное выдвижение */
-    z-index: 1001; /* Ниже модального окна, выше main-container */
+    z-index: 1001; /* Ниже модального окна */
 }
 
+/* Тёмная тема для бокового меню */
 body.dark-theme .sidebar {
-    background-color: #2d3748; /* Тёмный фон в тёмной теме */
+    background-color: #2d3748; /* Тёмный фон */
 }
 
+/* Активное боковое меню */
 .sidebar.active {
-    transform: translateX(0); /* Показывает меню при активации */
+    transform: translateX(0); /* Показывает меню */
 }
 
-/* Заголовочная полоса бокового меню */
+/* Заголовок бокового меню */
 #sidebar-header {
     width: 100%; /* Полная ширина */
     padding: 0.75rem 1rem; /* Отступы: 12px сверху/снизу, 16px слева/справа */
-    background-color: #e0e0e0; /* Светло-серый фон для светлой темы */
-    display: flex; /* Flexbox для расположения элементов */
-    align-items: center; /* Вертикальное центрирование */
+    background-color: #e0e0e0; /* Светло-серый фон */
+    display: flex; /* Flexbox для элементов */
+    align-items: center; /* Центрирование по вертикали */
     justify-content: space-between; /* Элементы по краям */
     box-sizing: border-box; /* Включает padding в размеры */
 }
 
+/* Тёмная тема для заголовка бокового меню */
 body.dark-theme #sidebar-header {
-    background-color: #4a5568; /* Тёмный фон в тёмной теме */
+    background-color: #4a5568; /* Тёмный фон */
 }
 
 /* Кнопка смены темы */
@@ -302,18 +547,21 @@ body.dark-theme #sidebar-header {
     padding: 0.5rem; /* Отступы 8px */
 }
 
+/* Иконка кнопки смены темы */
 .theme-button img {
     width: 24px; /* Ширина иконки 24px */
     height: 24px; /* Высота иконки 24px */
 }
 
+/* Иконка луны в тёмной теме */
 body.dark-theme .theme-button img {
-    content: url('../icons/moon.svg'); /* Иконка луны в тёмной теме */
-    filter: brightness(0) invert(1); /* Делает иконку белой */
+    content: url('../icons/moon.svg'); /* Иконка луны */
+    filter: brightness(0) invert(1); /* Белая иконка */
 }
 
+/* Иконка солнца в светлой теме */
 body:not(.dark-theme) .theme-button img {
-    content: url('../icons/sun.svg'); /* Иконка солнца в светлой теме */
+    content: url('../icons/sun.svg'); /* Иконка солнца */
 }
 
 /* Иконки меню */
@@ -325,109 +573,140 @@ body:not(.dark-theme) .theme-button img {
     vertical-align: middle; /* Вертикальное выравнивание */
 }
 
+/* Тёмная тема для иконок меню */
 body.dark-theme .menu-icon {
-    filter: brightness(0) invert(1); /* Делает иконки белыми в тёмной теме */
+    filter: brightness(0) invert(1); /* Белые иконки */
+}
+
+/* Контент бокового меню */
+#sidebar-content {
+    padding: 1rem; /* Отступы 16px */
 }
 
 /* Пункты меню */
-#sidebar-content {
-    padding: 1rem; /* Внутренние отступы 16px */
-}
-
 #sidebar-content .menu-item {
-    display: flex; /* Flexbox для расположения */
-    align-items: center; /* Вертикальное центрирование */
+    display: flex; /* Flexbox для пункта */
+    align-items: center; /* Центрирование по вертикали */
     padding: 0.75rem 1rem; /* Отступы: 12px сверху/снизу, 16px слева/справа */
     margin-bottom: 3rem; /* Отступ снизу 48px */
     cursor: pointer; /* Курсор указателя */
-    border-bottom: 1px solid #e2e8f0; /* Серая граница снизу */
+    border-bottom: 1px solid #e2e8f0; /* Серая граница */
     box-sizing: border-box; /* Включает padding в размеры */
 }
 
+/* Общие стили для пунктов меню */
 .menu-item {
     padding: 0.5rem; /* Отступы 8px */
     cursor: pointer; /* Курсор указателя */
-    border-bottom: 1px solid #e2e8f0; /* Серая граница снизу */
+    border-bottom: 1px solid #e2e8f0; /* Серая граница */
 }
 
+/* Наведение на пункт меню */
 .menu-item:hover {
-    background-color: #e0e0e0; /* Светло-серый фон при наведении */
+    background-color: #e0e0e0; /* Светло-серый фон */
 }
 
+/* Тёмная тема для пунктов меню */
 body.dark-theme .menu-item {
-    border-bottom-color: #4a5568; /* Тёмная граница в тёмной теме */
+    border-bottom-color: #4a5568; /* Тёмная граница */
 }
 
+/* Наведение на пункт меню в тёмной теме */
 body.dark-theme .menu-item:hover {
-    background-color: #4a5568; /* Тёмный фон при наведении в тёмной теме */
+    background-color: #4a5568; /* Тёмный фон */
 }
 
 /* Статистика */
 #stats-summary p {
-    margin: 0.5rem 0; /* Отступы сверху и снизу 8px */
+    margin: 0.5rem 0; /* Отступы сверху/снизу 8px */
 }
 
+/* Диаграммы статистики */
 #stats-chart, #history-chart {
-    max-width: 100%; /* Полная ширина диаграмм */
+    max-width: 100%; /* Полная ширина */
 }
 
+/* Таблицы статистики */
 table {
-    width: 100%; /* Полная ширина таблицы */
+    width: 100%; /* Полная ширина */
     border-collapse: collapse; /* Убирает промежутки между ячейками */
 }
 
+/* Ячейки таблицы */
 th, td {
-    border: 1px solid #e2e8f0; /* Серая рамка ячеек */
-    padding: 0.5rem; /* Отступы внутри ячеек 8px */
-    text-align: left; /* Выравнивание текста слева */
+    border: 1px solid #e2e8f0; /* Серая рамка */
+    padding: 0.5rem; /* Отступы 8px */
+    text-align: left; /* Выравнивание слева */
 }
 
+/* Тёмная тема для ячеек таблицы */
 body.dark-theme th, body.dark-theme td {
-    border-color: #4a5568; /* Тёмная рамка в тёмной теме */
+    border-color: #4a5568; /* Тёмная рамка */
 }
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 640px) {
+    /* Главный контейнер на мобильных */
     #main-container {
-        width: 100%; /* Полная ширина на мобильных */
+        width: 100%; /* Полная ширина */
     }
+
+    /* Верхняя полоса на мобильных */
     #top-bar {
         padding: 0.5rem 0.75rem; /* Отступы: 8px сверху/снизу, 12px слева/справа */
     }
+
+    /* Заголовок приложения на мобильных */
     #app-title {
         font-size: 1.5rem; /* Размер шрифта 24px */
     }
+
+    /* Заголовок режима на мобильных */
     #mode-title {
-        font-size: 1.25rem; /* Размер шрифта 20px для "Тренировка"/"Тестирование" */
-        margin-top: 0.1rem; /* Минимальный отступ сверху 1.6px для плотного прилегания */
+        font-size: 1.25rem; /* Размер шрифта 20px */
+        margin-top: 0.1rem; /* Отступ сверху 1.6px */
     }
+
+    /* Контент модального окна на мобильных */
     .modal-content {
-        width: 100%; /* Полная ширина на мобильных */
-        height: 100%; /* Полная высота на мобильных */
-        max-width: none; /* Убирает ограничение ширины */
-        max-height: none; /* Убирает ограничение высоты */
-        border-radius: 0; /* Убирает скругление углов */
+        width: 100%; /* Полная ширина */
+        height: 100%; /* Полная высота */
+        max-width: none; /* Без ограничения ширины */
+        max-height: none; /* Без ограничения высоты */
+        border-radius: 0; /* Без скругления углов */
         padding: 0.5rem; /* Отступы 8px */
     }
+
+    /* Боковое меню на мобильных */
     .sidebar {
         left: 0; /* Прижато к левому краю */
-        width: 80%; /* Ширина 80% на мобильных */
+        width: 80%; /* Ширина 80% */
         z-index: 1001; /* Ниже модального окна */
     }
+
+    /* Метки в таблице на мобильных */
     .table-cell span[data-i18n="digit_label"],
     .table-cell span[data-i18n="letter_word_label"] {
-        font-size: 1rem; /* Размер шрифта меток 16px */
+        font-size: 1rem; /* Размер шрифта 16px */
     }
+
+    /* Цифра в карточке на мобильных */
     #card-digit {
         font-size: 3rem; /* Размер шрифта 48px */
     }
+
+    /* Текст в карточке на мобильных */
     #card-text {
         font-size: 3rem; /* Размер шрифта 48px */
     }
+
+    /* Изображение карточки на мобильных */
     #card-image {
         max-height: 36vh; /* Максимальная высота 36% экрана */
         margin-top: 0.5rem; /* Отступ сверху 8px */
     }
+
+    /* Кнопки на мобильных */
     .button {
         padding: 0.5rem; /* Отступы 8px */
         min-width: 100px; /* Минимальная ширина 100px */

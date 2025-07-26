@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div id="sidebar-cover"></div>
     <div id="main-container">
         <div id="top-bar" class="flex items-center justify-between px-4 py-2">
             <button id="menu-button" class="button" onclick="toggleMenu()" title="Open menu">
@@ -87,55 +88,75 @@
         <div id="modal-content" class="modal-content"></div>
     </div>
 
-     <template id="settings-modal-template">
-        <div class="p-4">
-            <h2 data-i18n="settings">Settings</h2>
-            <div class="mb-4">
+    <template id="settings-modal-template">
+        <div class="p-4 flex flex-col items-center h-full">
+            <h2 class="text-center text-2xl font-bold mb-2" data-i18n="settings">Settings</h2>
+            <hr class="w-full border-t border-gray-300 dark:border-gray-600 mb-4">
+            <h3 class="text-center text-lg mb-2" data-i18n="range_label">Range of digits to memorize</h3>
+            <div class="range-container">
                 <label data-i18n="range_from">From:</label>
-                <input id="range-start" type="number" min="0" max="99" class="border p-1">
+                <input id="range-start" type="number" min="0" max="99" value="0">
                 <label data-i18n="range_to">To:</label>
-                <input id="range-end" type="number" min="0" max="99" class="border p-1">
+                <input id="range-end" type="number" min="0" max="99" value="9">
             </div>
-            <div class="mb-4">
-                <label><input type="radio" name="order" value="sequential" checked> <span data-i18n="sequential">Sequential</span></label>
-                <label><input type="radio" name="order" value="random"> <span data-i18n="random">Random</span></label>
+            <hr class="w-full border-t border-gray-300 dark:border-gray-600 mb-4">
+            <h3 class="text-center text-lg mb-2" data-i18n="order_label">Order of digits</h3>
+            <div class="order-container">
+                <label>
+                    <input type="radio" name="order" value="sequential" checked>
+                    <span data-i18n="sequential">Sequential</span>
+                </label>
+                <label>
+                    <input type="radio" name="order" value="random">
+                    <span data-i18n="random">Random</span>
+                </label>
             </div>
-            <div class="mb-4">
-                <label data-i18n="display_time">Display time (sec):</label>
-                <select id="delay-select" class="border p-1">
-                    <option value="1000">1</option>
-                    <option value="2000">2</option>
-                    <option value="3000">3</option>
-                    <option value="4000">4</option>
-                    <option value="5000">5</option>
-                </select>
+            <hr class="w-full border-t border-gray-300 dark:border-gray-600 mb-4">
+            <h3 class="text-center text-lg mb-2" data-i18n="timing_label">Timing</h3>
+            <div class="timing-container">
+                <div class="timing-select">
+                    <label data-i18n="display_time">Display time (sec):</label>
+                    <select id="delay-select">
+                        <option value="1000">1</option>
+                        <option value="2000">2</option>
+                        <option value="3000">3</option>
+                        <option value="4000">4</option>
+                        <option value="5000" selected>5</option>
+                    </select>
+                </div>
+                <div class="timing-select">
+                    <label data-i18n="answer_time">Answer time (sec):</label>
+                    <select id="answer-time-select">
+                        <option value="3000">3</option>
+                        <option value="5000">5</option>
+                        <option value="7000">7</option>
+                        <option value="10000" selected>10</option>
+                    </select>
+                </div>
             </div>
-            <div class="mb-4">
-                <label data-i18n="answer_time">Answer time (sec):</label>
-                <select id="answer-time-select" class="border p-1">
-                    <option value="3000">3</option>
-                    <option value="5000">5</option>
-                    <option value="7000">7</option>
-                    <option value="10000">10</option>
-                </select>
-            </div>
-            <div class="mb-4">
-                <button onclick="resetSettings()" data-i18n="reset_settings" class="button">Reset Settings</button>
-            </div>
-            <div class="mb-4">
-                <button onclick="showExportImportModal()" data-i18n="export_import_settings" class="button">Export/Import Settings</button>
-            </div>
-            <button onclick="updateRange()" data-i18n="update" class="button">Update</button>
-        </div>
-    </template>
-    <template id="export-import-modal-template">
-        <div class="p-4">
-            <h2 data-i18n="export_import_settings">Export/Import Settings</h2>
-            <button onclick="exportSettings()" data-i18n="export_settings" class="button mb-2">Export Settings</button>
-            <div>
-                <label data-i18n="import_settings">Import Settings:</label>
-                <input id="import-settings" type="file" accept=".json" class="mb-2">
-                <button onclick="importSettings()" data-i18n="import_settings" class="button">Import</button>
+            <hr class="w-full border-t border-gray-300 dark:border-gray-600 mb-4">
+            <div class="settings-buttons-container">
+                <button class="settings-button" onclick="resetSettings()" title="Reset Settings">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+                <button class="settings-button" onclick="exportSettings()" title="Export Settings">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l-7-7h4V4h6v8h4l-7 7z"></path>
+                    </svg>
+                </button>
+                <button class="settings-button" onclick="document.getElementById('import-settings').click()" title="Import Settings">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5l7 7h-4v8h-6v-8H5l7-7z"></path>
+                    </svg>
+                </button>
+                <input id="import-settings" type="file" accept=".json" class="hidden" onchange="importSettings()">
+                <button class="settings-button" onclick="updateRange()" title="Update">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                </button>
             </div>
         </div>
     </template>
