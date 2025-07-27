@@ -199,9 +199,23 @@
         </div>
     </template>
     <template id="about-modal-template">
-        <div class="p-4">
+        <div class="modal-about p-4">
             <h2 data-i18n="about">About</h2>
-            <p data-i18n="about_text">Author: Rostislav\nThis application is designed to train memory by associating digits with letters, words, and images.</p>
+            <div class="about-content">
+                <p data-i18n="about_description"><strong>MemoryTraining</strong> is an application designed to enhance your memory by training associations between numbers, letters, words, and images.</p>
+                <p data-i18n="version"><strong>Version:</strong> 1.0</p>
+                <h3 data-i18n="tools_title">Tools and Technologies</h3>
+                <ul>
+                    <li data-i18n="tool_environment"><strong>Development Environment:</strong> PyCharm on Linux</li>
+                    <li data-i18n="tool_languages"><strong>Programming Languages:</strong> Python 3.12, HTML, CSS, JavaScript</li>
+                    <li data-i18n="tool_version_control"><strong>Version Control:</strong> Git, hosted on GitHub</li>
+                    <li data-i18n="tool_hosting"><strong>Hosting:</strong> GitHub Pages</li>
+                    <li data-i18n="tool_others"><strong>Other Tools:</strong> JSON for internationalization, Python HTTP server for local testing</li>
+                </ul>
+                <p data-i18n="about_author"><strong>About the Author: Rostislav Smigliuc</strong> </p>
+                <p data-i18n="about_author_more">Learn more about the creator of MemoryTraining on their portfolio: </p>
+                <a href="https://skillflux.dev/" target="_blank" class="about-link" data-i18n="portfolio_link">SkillFlux Portfolio</a>
+            </div>
         </div>
     </template>
     <template id="stats-modal-template">
