@@ -294,23 +294,40 @@ function showModal(templateId) {
             const closeButton = document.createElement('button');
             closeButton.id = 'close-modal-button';
             closeButton.className = 'close-button';
-            closeButton.textContent = 'X'; // Используем текст "X" вместо эмодзи
+            closeButton.textContent = 'X'; // Используем текст для крестика
             closeButton.onclick = closeModal;
             modalContent.appendChild(closeButton);
-            modal.style.display = 'flex'; // Показываем модальное окно
-            document.querySelector('.sidebar.active')?.classList.remove('active'); // Закрываем боковое меню
+            modal.style.display = 'flex'; // Показываем окно
+            document.querySelector('.sidebar.active')?.classList.remove('active'); // Закрываем меню
             fetch(`../i18n/${currentLanguage}.json`) // Загружаем переводы
                 .then(response => {
-                    if (!response.ok) throw new Error(`Failed to load translations for modal: ../i18n/${currentLanguage}.json`); // Проверка загрузки
-                    return response.json(); // Парсим JSON
+                    if (!response.ok) throw new Error(`Failed to load translations for modal: ../i18n/${currentLanguage}.json`);
+                    return response.json();
                 })
                 .then(translations => {
-                    modalContent.querySelectorAll('[data-i18n]').forEach(element => { // Применяем переводы
+                    modalContent.querySelectorAll('[data-i18n]').forEach(element => {
                         const key = element.getAttribute('data-i18n');
-                        element.textContent = translations[key] || element.textContent; // Устанавливаем перевод
+                        element.innerHTML = translations[key] || element.textContent; // Используем innerHTML для поддержки HTML
                     });
+                    // Устанавливаем ссылку на PDF в зависимости от языка
+                    const downloadLink = modalContent.querySelector('#download-instructions');
+                    if (downloadLink) {
+                        const pdfFile = `./docs/MemoryTraining_Instructions_${currentLanguage}.pdf`; // Исправленный путь
+                        downloadLink.href = pdfFile;
+                        downloadLink.setAttribute('download', `MemoryTraining_Instructions_${currentLanguage}.pdf`); // Явно задаём имя файла
+                        // Добавляем обработчик для принудительного скачивания
+                        downloadLink.addEventListener('click', (event) => {
+                            event.preventDefault(); // Предотвращаем открытие файла
+                            const link = document.createElement('a');
+                            link.href = pdfFile;
+                            link.download = `MemoryTraining_Instructions_${currentLanguage}.pdf`;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        });
+                    }
                 })
-                .catch(error => console.error('Error loading modal translations:', error)); // Логируем ошибку
+                .catch(error => console.error('Error loading modal translations:', error));
         }
     }
 }
